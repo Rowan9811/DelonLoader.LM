@@ -23,6 +23,19 @@ public class InjectionHelper {
         LogBridge.msg("libBootstrap.so successfully loaded");
     }
 
+    public static void StartEOS() throws Exception {
+        LogBridge.msg("Initializing EOS...");
+
+        try {
+            System.loadLibrary("EOSSDK");
+        } catch (UnsatisfiedLinkError e) {
+            LogBridge.error("Failed to load \"libEOSSDK.so\" - Perhaps its not in lib?");
+            throw e;
+        }
+
+        LogBridge.msg("libEOSSDK.so successfully loaded");
+    }
+
     public static void Initialize(Activity context)
     {
         ApplicationState.UpdateActivity(context);
@@ -34,6 +47,11 @@ public class InjectionHelper {
 
         try {
             InjectBootstrap();
+        } catch (Exception e) {
+            LogBridge.error(e.getMessage());
+        }
+        try {
+            StartEOS();
         } catch (Exception e) {
             LogBridge.error(e.getMessage());
         }
