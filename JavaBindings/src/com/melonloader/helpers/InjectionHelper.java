@@ -1,11 +1,13 @@
 package com.melonloader.helpers;
 
 import android.app.Activity;
-import android.content.Context;
 
 import com.melonloader.ApplicationState;
 import com.melonloader.Bootstrap;
 import com.melonloader.LogBridge;
+
+import java.io.File;
+import java.nio.file.Paths;
 
 public class InjectionHelper {
     public static void InjectBootstrap() throws Exception {
@@ -44,6 +46,11 @@ public class InjectionHelper {
         AssemblyHelper.InstallAssemblies();
         // AssetsTools can't read the data, unsure why
         //UnityInformationHelper.SaveGlobalGameManagersToFile();
+
+        // Funchook Cleanup
+        File logPath = Paths.get(ApplicationState.BaseDirectory, "funchook.log").toFile();
+        if (logPath.exists())
+            logPath.delete();
 
         try {
             InjectBootstrap();
