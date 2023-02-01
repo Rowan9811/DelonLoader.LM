@@ -15,6 +15,8 @@
 
 ---
 
+[Lemon Trello Board](https://trello.com/b/tzQ4yjU1/lemonloader)
+
 ## Lemon Credits
 - [SirCoolness](https://github.com/SirCoolness)
   - Made the original version of Lemon which gave me a major starting place.
