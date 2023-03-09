@@ -12,3 +12,4 @@ _deps
 
 tools/.env
 cmake-build-debug-wsl---bootstrap
+android-build

@@ -1,6 +1,7 @@
 #!/bin/bash
 
 BASE_DIR=$(realpath "$(dirname -- "$(readlink -f -- "${BASH_SOURCE}")")/../../")
+dos2unix "${BASE_DIR}/Bootstrap/tools/.env"
 source "${BASE_DIR}/Bootstrap/tools/.env"
 
 POSITIONAL=()
