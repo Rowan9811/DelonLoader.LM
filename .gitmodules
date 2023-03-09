@@ -4,3 +4,6 @@
 [submodule "JavaBindings/external/BHapticsHapticLibrary"]
 	path = JavaBindings/external/BHapticsHapticLibrary
 	url = https://github.com/bhaptics/haptic-library.git
+[submodule "Bootstrap/external/funchook"]
+	path = Bootstrap/external/funchook
+	url = https://github.com/LemonLoader/funchook.git
