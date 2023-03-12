@@ -89,20 +89,23 @@ Write-Host "Building Bootstrap..."
 
 # Build Bootstrap
 # TODO: find a way to not reuse CLion's build directory, idk why generating my own causes errors
-$bsBuildDir = "../Bootstrap/cmake-build-debug-wsl---bootstrap"
+$bsBuildDir = "../Bootstrap/android-build"
 Start-Process -FilePath "bash.exe" -ArgumentList @("-c `"cd $bsBuildDir && dos2unix ../tools/build.sh`"") -Wait -NoNewWindow
 Start-Process -FilePath "bash.exe" -ArgumentList @("-c `"cd $bsBuildDir && dos2unix ../tools/cmake_wrapper.sh`"") -Wait -NoNewWindow
 Start-Process -FilePath "bash.exe" -ArgumentList @("-c `"cd $bsBuildDir && ../tools/build.sh`"") -Wait -NoNewWindow
 
 # Copy Native Modules
 Copy-Item `
-    -Path "$baseMlPath\Bootstrap\cmake-build-debug-wsl---bootstrap\libBootstrap.so" `
+    -Path "$baseMlPath\Bootstrap\android-build\libBootstrap.so" `
     -Destination "installer_deps\native"
 Copy-Item `
-    -Path "$baseMlPath\Bootstrap\cmake-build-debug-wsl---bootstrap\capstone\libcapstone.so" `
+    -Path "$baseMlPath\Bootstrap\android-build\capstone\libcapstone.so" `
+    -Destination "installer_deps\native"
+Copy-Item `
+    -Path "$baseMlPath\Bootstrap\android-build\dobby\libdobby.so" `
     -Destination "installer_deps\native"
 #Copy-Item `
-#    -Path "$baseMlPath\Bootstrap\cmake-build-debug-wsl---bootstrap\funchook\libfunchook.so" `
+#    -Path "$baseMlPath\Bootstrap\android-build\funchook\libfunchook.so" `
 #    -Destination "installer_deps\native"
 
 Write-Host "Done`n"

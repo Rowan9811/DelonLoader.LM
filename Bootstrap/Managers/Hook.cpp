@@ -36,9 +36,50 @@ void Hook::Detach(void** target, void* detour)
 #endif
 
 #ifdef __ANDROID__
-std::unordered_map<void*, Hook::FunchookDef*> Hook::HookMap;
+std::unordered_map<void*, Hook::FunchookDef*> Hook::FuncHookMap;
+std::unordered_map<void*, Hook::HookDef*> Hook::DobbyHookMap;
 
 void Hook::Attach(void** target, void* detour)
+{
+    //Debug::Msg("attaching");
+
+    if (DobbyHookMap.find(detour) == DobbyHookMap.end()) {
+        Hook::HookDef* handle = nullptr;
+        DobbyHookMap[detour] = handle = (Hook::HookDef*)malloc(sizeof(Hook::HookDef));
+        handle->backup = *target;
+
+        void* org = nullptr;
+        int dobby = DobbyHook(*target, (dobby_dummy_func_t)detour, (dobby_dummy_func_t*)&org);
+        *target = org;
+#ifdef DEBUG
+        std::string dobbyOutput = "Hook::Attach = " + std::to_string(dobby);
+        Logger::QuickLog(dobbyOutput.c_str(), LogType::Debug);
+#endif
+    }
+    else
+        Logger::QuickLog("trying to hook already hooked detour i think?", LogType::Warning);
+}
+
+void Hook::Detach(void** target, void* detour)
+{
+    //Logger::QuickLog("Hook detach attempted");
+
+    if (DobbyHookMap.find(detour) == DobbyHookMap.end()) {
+        Logger::QuickLog("Hook does not exist, can't unhook", LogType::Error);
+    }
+    else {
+        void* stub = DobbyHookMap[detour]->backup;
+        int dobby = DobbyDestroy(stub);
+#ifdef DEBUG
+        std::string dobbyOutput = "Hook::Detach = " + std::to_string(dobby);
+        Logger::QuickLog(dobbyOutput.c_str(), LogType::Debug);
+#endif
+        stub = nullptr;
+        free(DobbyHookMap[detour]);
+    }
+}
+
+void Hook::AttachFH(void** target, void* detour)
 {
     //Debug::Msg("attaching");
 
@@ -46,9 +87,9 @@ void Hook::Attach(void** target, void* detour)
     void* trueTarget = detour;
     Hook::FunchookDef* handle = nullptr;
 
-    if (HookMap.find(trueTarget) == HookMap.end())
+    if (FuncHookMap.find(trueTarget) == FuncHookMap.end())
     {
-        HookMap[trueTarget] = handle = (Hook::FunchookDef*)malloc(sizeof(Hook::FunchookDef));
+        FuncHookMap[trueTarget] = handle = (Hook::FunchookDef*)malloc(sizeof(Hook::FunchookDef));
         handle->original = *target;
         handle->handle = funchook_create();
         rv = funchook_prepare(handle->handle, target, detour);
@@ -58,7 +99,7 @@ void Hook::Attach(void** target, void* detour)
             return;
         }
     } else
-        handle = HookMap[trueTarget];
+        handle = FuncHookMap[trueTarget];
 
     rv = funchook_install(handle->handle, 0);
     if (rv != 0)
@@ -70,7 +111,7 @@ void Hook::Attach(void** target, void* detour)
     return;
 }
 
-void Hook::Detach(void** target, void* detour)
+void Hook::DetachFH(void** target, void* detour)
 {
     //Debug::Msg("detaching");
 
@@ -79,12 +120,12 @@ void Hook::Detach(void** target, void* detour)
     void* trueTarget = detour;
     Hook::FunchookDef* handle = nullptr;
 
-    if (HookMap.find(trueTarget) == HookMap.end())
+    if (FuncHookMap.find(trueTarget) == FuncHookMap.end())
     {
         Logger::QuickLog("Hook doesn't exist", LogType::Error);
         return;
     } else
-        handle = HookMap[trueTarget];
+        handle = FuncHookMap[trueTarget];
 
     void* reset = handle->original;
 

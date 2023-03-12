@@ -26,11 +26,12 @@ list(APPEND HEADERS_FILES ./Core.h)
 if(PLATFORM STREQUAL "ANDROID")
     set(USE_CAPSTONE YES)
     set(USE_FUNCHOOK YES)
+    set(USE_DOBBY YES)
 
     add_compile_definitions(__ANDROID__ PORT_DISABLE)
 
     list(APPEND SRC_FILES ./Base/main.cpp)
-    list(APPEND BOOTSTRAP_DEPS capstone-shared funchook-shared log android)
+    list(APPEND BOOTSTRAP_DEPS capstone-shared funchook-shared dobby log android)
 elseif(PLATFORM STREQUAL "WINDOWS")
     add_compile_definitions(_WIN32)
 
@@ -39,7 +40,7 @@ elseif(NOT DEFINED PLATFORM)
     message(FATAL_ERROR "PLATFORM is unset")
 endif()
 
-add_library(${PROJECT_NAME} SHARED ${SRC_FILES} ${HEADER_FILES} Utils/Console/Log.cpp Utils/Console/Log.h)
+add_library(${PROJECT_NAME} SHARED ${SRC_FILES} ${HEADER_FILES} Utils/Console/Log.cpp Utils/Console/Log.h Utils/JNIManagedInterface.cpp Utils/JNIManagedInterface.h)
 
 if(DEFINED USE_CAPSTONE)
     set(CAPSTONE_BUILD_STATIC OFF)
@@ -84,6 +85,18 @@ if(DEFINED USE_FUNCHOOK)
     get_property(FC_LINK_LIBRARIES TARGET funchook-shared PROPERTY LINK_LIBRARIES)
     list(REMOVE_ITEM LINK_LIBRARIES capstone)
     set_property(TARGET funchook-shared PROPERTY LINK_LIBRARIES dl capstone-shared)
+endif()
+
+if(DEFINED USE_DOBBY)
+    set(DOBBY_GENERATE_SHARED ON)
+    set(DOBBY_DEBUG ON)
+    set(NearBranch ON)
+
+    add_compile_definitions("ANDROID_LOG_STDOUT")
+    add_subdirectory("./external/Dobby" Dobby)
+
+    get_property(FC_LINK_LIBRARIES TARGET dobby PROPERTY LINK_LIBRARIES)
+    set_property(TARGET dobby PROPERTY LINK_LIBRARIES dl)
 endif()
 
 #if (CMAKE_BUILD_TYPE EQUAL "Debug")

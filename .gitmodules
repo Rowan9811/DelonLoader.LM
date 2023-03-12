@@ -7,3 +7,6 @@
 [submodule "Bootstrap/external/funchook"]
 	path = Bootstrap/external/funchook
 	url = https://github.com/LemonLoader/funchook.git
+[submodule "Bootstrap/external/dobby"]
+	path = Bootstrap/external/dobby
+	url = https://github.com/jmpews/Dobby.git
