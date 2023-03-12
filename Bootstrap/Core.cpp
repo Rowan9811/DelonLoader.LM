@@ -139,8 +139,8 @@ bool Core::Initialize()
                     XrefScannerBindings::Init
             },
             {
-                "Initialize Funchook",
-                Hook::FunchookPrepare
+                "Setup Hooking",
+                Hook::Setup
             },
 #endif
             {

@@ -143,9 +143,9 @@ void Hook::DetachFH(void** target, void* detour)
 #endif
 
 #ifdef __ANDROID__
-bool Hook::FunchookPrepare() {
+bool Hook::Setup() {
     funchook_set_debug_file((std::string(AndroidData::DataDir) + "/funchook.log").c_str());
-
+    dobby_enable_near_branch_trampoline();
     return true;
 }
 #endif

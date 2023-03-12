@@ -14,7 +14,7 @@ public:
     static void Detach(void** target, void* detour);
     static void DetachFH(void** target, void* detour);
 #ifdef __ANDROID__
-    static bool FunchookPrepare();
+    static bool Setup();
 #endif
 #ifdef __ANDROID__
 private:
