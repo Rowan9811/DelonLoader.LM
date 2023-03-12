@@ -197,6 +197,8 @@ void InternalCalls::MelonUtils::AddInternalCalls()
     Mono::AddInternalCall("MelonLoader.MelonUtils::GetFileProductName", (void*)GetFileProductName);
     Mono::AddInternalCall("MelonLoader.MelonUtils::NativeHookAttach", (void*)Hook::Attach);
     Mono::AddInternalCall("MelonLoader.MelonUtils::NativeHookDetach", (void*)Hook::Detach);
+    Mono::AddInternalCall("MelonLoader.MelonUtils::NativeHookAttachFH", (void*)Hook::AttachFH);
+    Mono::AddInternalCall("MelonLoader.MelonUtils::NativeHookDetachFH", (void*)Hook::DetachFH);
 
     Mono::AddInternalCall("MelonLoader.MelonUtils::Internal_GetGamePackage", (void*)GetGamePackage);
     Mono::AddInternalCall("MelonLoader.MelonUtils::Internal_GetGameName", (void*)GetGameName);
