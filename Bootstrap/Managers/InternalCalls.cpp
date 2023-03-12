@@ -261,7 +261,8 @@ void* InternalCalls::UnhollowerIl2Cpp::LoadLibrary(Mono::String* lpFileName)
     char* parsedLib = Mono::Exports::mono_string_to_utf8(lpFileName);
     //Debug::Msg(parsedLib);
     if (strcmp(parsedLib, "GameAssembly.dll") == 0
-       || strcmp(parsedLib, "libil2cpp.so") == 0)
+       || strcmp(parsedLib, "libil2cpp.so") == 0
+       || strcmp(parsedLib, "il2cpp") == 0)
         return Il2Cpp::Handle;
 
     return dlopen(parsedLib, RTLD_NOW | RTLD_GLOBAL);
