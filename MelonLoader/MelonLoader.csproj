@@ -92,4 +92,9 @@
 	<ItemGroup>
 		<None Include="Resources\classdata.tpk" />
 	</ItemGroup>
+	<ItemGroup>
+	  <Reference Include="JNISharp">
+	    <HintPath>..\..\JNISharp\JNISharp\bin\Debug\net35\JNISharp.dll</HintPath>
+	  </Reference>
+	</ItemGroup>
 </Project>

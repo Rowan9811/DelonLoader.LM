@@ -18,6 +18,7 @@
 
 #include "BaseAssembly.h"
 #include "../Utils/Encoding.h"
+#include "../Utils/JNIManagedInterface.h"
 
 bool InternalCalls::Initialized = false;
 
@@ -32,6 +33,10 @@ void InternalCalls::Initialize()
     BHaptics::AddInternalCalls();
 
     Mono::AddInternalCall("MelonLoader.Fixes.DateTimeOverride::GetLocalTimeZone", (void*)GetLocalTimeZone);
+
+    Mono::AddInternalCall("JNISharp.NativeInterface.JVMImports::JNI_CreateJavaVM", (void*)JNIManagedInterface::JNI_CreateJavaVM);
+    Mono::AddInternalCall("JNISharp.NativeInterface.JVMImports::JNI_GetDefaultJavaVMInitArgs", (void*)JNIManagedInterface::JNI_GetDefaultJavaVMInitArgs);
+    Mono::AddInternalCall("JNISharp.NativeInterface.JVMImports::JNI_GetCreatedJavaVMs", (void*)JNIManagedInterface::JNI_GetCreatedJavaVMs);
 
     Initialized = true;
 }

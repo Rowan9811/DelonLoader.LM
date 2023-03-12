@@ -67,6 +67,11 @@ Copy-Item `
     -Path "$baseMlPath\Output\Release\Android\MelonLoader\Dependencies\SupportModules\*.dll" `
     -Destination "installer_deps\support_modules"
 
+# Copy Support Modules
+Copy-Item `
+    -Path "$baseMlPath\..\JNISharp\JNISharp\bin\Debug\net35\JNISharp.dll" `
+    -Destination "installer_deps\managed"
+
 Write-Host "Done`n"
 Write-Host "Building JavaBindings..."
 

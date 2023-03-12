@@ -20,6 +20,9 @@ namespace MelonLoader
             MelonUtils.Setup(curDomain);
             Assertions.LemonAssertMapping.Setup();
 
+
+            JNISharp.NativeInterface.JNI.Initialize(new JNISharp.NativeInterface.JavaVMInitArgs());
+
             // TODO: MonoLibrary stuff
 #if !__ANDROID__
             if (!MonoLibrary.Setup()
