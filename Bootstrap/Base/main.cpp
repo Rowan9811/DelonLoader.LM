@@ -1,5 +1,6 @@
 #include "../Core.h"
 #include <jni.h>
+#include "../Managers/BaseAssembly.h"
 
 extern "C"
 {
@@ -16,5 +17,10 @@ JNIEXPORT jint JNI_OnLoad(JavaVM* vm, void* reserved)
 jboolean Java_com_melonloader_Bootstrap_Initialize(JNIEnv* env)
 {
     return (jboolean)Core::Initialize();
+}
+
+void Java_com_melonloader_Bootstrap_OnExit(JNIEnv* env)
+{
+    BaseAssembly::Quit();
 }
 }

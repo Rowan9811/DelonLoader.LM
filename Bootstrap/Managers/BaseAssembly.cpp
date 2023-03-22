@@ -10,6 +10,7 @@ char* BaseAssembly::PathMono = NULL;
 char* BaseAssembly::PreloadPath = NULL;
 Mono::Method* BaseAssembly::Mono_PreStart = NULL;
 Mono::Method* BaseAssembly::Mono_Start = NULL;
+Mono::Method* BaseAssembly::Mono_Quit = NULL;
 Mono::Assembly* BaseAssembly::Assembly = NULL;
 Mono::Image* BaseAssembly::Image = NULL;
 
@@ -60,6 +61,13 @@ bool BaseAssembly::Initialize()
 		Assertion::ThrowInternalFailure("Failed to Get Start Method from Mono Class!");
 		return false;
 	}
+
+    Mono_Quit = Mono::Exports::mono_class_get_method_from_name(klass, "Quit", NULL);
+    if (Mono_Quit == NULL)
+    {
+        Assertion::ThrowInternalFailure("Failed to Get Quit Method from Mono Class!");
+        return false;
+    }
 	
 	Logger::WriteSpacer();
 	Mono::Object* exObj = NULL;
@@ -123,6 +131,24 @@ void BaseAssembly::Start()
 	if (Debug::Enabled)
 		Logger::WriteSpacer();
 }
+
+void BaseAssembly::Quit()
+{
+    if (Mono_Quit == NULL)
+        return;
+    Debug::Msg("Quitting Base Assembly...");
+    Logger::WriteSpacer();
+    Mono::Object* exObj = NULL;
+    Mono::Exports::mono_runtime_invoke(Mono_Quit, NULL, NULL, &exObj);
+    if (exObj != NULL)
+    {
+        Mono::LogException(exObj);
+        Assertion::ThrowInternalFailure("Failed to Invoke Quit Method!");
+    }
+    Debug::Msg("Quit Base Assembly!");
+    Logger::WriteSpacer();
+}
+
 
 bool BaseAssembly::SetupPaths()
 {
