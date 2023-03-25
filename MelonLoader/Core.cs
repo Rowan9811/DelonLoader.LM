@@ -3,6 +3,7 @@ using System.Diagnostics;
 using MelonLoader.InternalUtils;
 using MelonLoader.MonoInternals;
 using bHapticsLib;
+using System.IO;
 #pragma warning disable IDE0051 // Prevent the IDE from complaining about private unreferenced methods
 
 namespace MelonLoader
@@ -20,7 +21,6 @@ namespace MelonLoader
             MelonUtils.Setup(curDomain);
             Assertions.LemonAssertMapping.Setup();
 
-
             JNISharp.NativeInterface.JNI.Initialize(new JNISharp.NativeInterface.JavaVMInitArgs());
 
             // TODO: MonoLibrary stuff
@@ -29,33 +29,44 @@ namespace MelonLoader
                 || !MonoResolveManager.Setup())
                 return 1;
 #else
-            foreach (var file in System.IO.Directory.GetFiles(MelonUtils.UserLibsDirectory, "*.dll"))
+            foreach (var file in Directory.GetFiles(MelonUtils.UserLibsDirectory, "*.dll"))
             {
                 try
                 {
                     System.Reflection.Assembly.LoadFrom(file);
-                    MelonDebug.Msg("Loaded " + System.IO.Path.GetFileName(file) + " from UserLibs!");
+                    MelonDebug.Msg("Loaded " + Path.GetFileName(file) + " from UserLibs!");
                 }
                 catch (Exception e)
                 {
-                    MelonLogger.Msg("Failed to load " + System.IO.Path.GetFileName(file) + " from UserLibs!");
+                    MelonLogger.Msg("Failed to load " + Path.GetFileName(file) + " from UserLibs!");
                     MelonLogger.Error(e.ToString());
                 }
             }
 #endif
 
+            bool bypassHarmony = false;
+            if (File.Exists(Path.Combine(MelonUtils.BaseDirectory, "isEmulator.txt")))
+            {
+                bypassHarmony = true;
+                // Tells Harmony that it already did some internal patching junk so that I don't have to modify the code myself
+                typeof(HarmonyLib.Traverse).Assembly.GetType("HarmonyLib.Internal.RuntimeFixes.StackTraceFixes").GetField("_applied", HarmonyLib.AccessTools.all).SetValue(null, true);
+            }
+
             HarmonyInstance = new HarmonyLib.Harmony(BuildInfo.Name);
 
-            Fixes.ForcedCultureInfo.Install();
-            Fixes.InstancePatchFix.Install();
-            Fixes.ProcessFix.Install();
+            if (!bypassHarmony)
+            {
+                Fixes.ForcedCultureInfo.Install();
+                Fixes.InstancePatchFix.Install();
+                Fixes.ProcessFix.Install();
 #if __ANDROID__
-            Fixes.DateTimeOverride.Install();
-            Fixes.NetSocketsFix.Install();
+                Fixes.DateTimeOverride.Install();
+                Fixes.NetSocketsFix.Install();
 #endif
 #if !__ANDROID__
-            PatchShield.Install();
+                PatchShield.Install();
 #endif
+            }
 
             MelonPreferences.Load();
 
