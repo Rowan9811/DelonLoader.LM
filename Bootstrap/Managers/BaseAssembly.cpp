@@ -134,13 +134,13 @@ void BaseAssembly::Start()
 
 void BaseAssembly::Pause()
 {
-    Mono::Object* exObj = NULL;
+    /*Mono::Object* exObj = NULL;
     Mono::Exports::mono_runtime_invoke(Mono_Pause, NULL, NULL, &exObj);
     if (exObj != NULL)
     {
         Mono::LogException(exObj);
         Assertion::ThrowInternalFailure("Failed to Invoke Pause Method!");
-    }
+    }*/
 }
 
 
