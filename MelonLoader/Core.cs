@@ -125,6 +125,11 @@ namespace MelonLoader
                 Process.GetCurrentProcess().Kill();
         }
 
+        private static void Pause()
+        {
+            MelonPreferences.Save();
+        }
+
         private static void AddUnityDebugLog()
         {
             var msg = "~   This Game has been MODIFIED using MelonLoader. DO NOT report any issues to the Game Developers!   ~";

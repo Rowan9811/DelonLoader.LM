@@ -10,7 +10,7 @@ public:
 	static bool Initialize();
 	static bool PreStart();
 	static void Start();
-    static void Quit();
+    static void Pause();
 	static bool SetupPaths();
 
 	static Mono::Assembly* Assembly;
@@ -19,5 +19,5 @@ public:
 private:
 	static Mono::Method* Mono_PreStart;
 	static Mono::Method* Mono_Start;
-    static Mono::Method* Mono_Quit;
+    static Mono::Method* Mono_Pause;
 };

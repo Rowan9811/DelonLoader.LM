@@ -10,7 +10,7 @@ char* BaseAssembly::PathMono = NULL;
 char* BaseAssembly::PreloadPath = NULL;
 Mono::Method* BaseAssembly::Mono_PreStart = NULL;
 Mono::Method* BaseAssembly::Mono_Start = NULL;
-Mono::Method* BaseAssembly::Mono_Quit = NULL;
+Mono::Method* BaseAssembly::Mono_Pause = NULL;
 Mono::Assembly* BaseAssembly::Assembly = NULL;
 Mono::Image* BaseAssembly::Image = NULL;
 
@@ -62,10 +62,10 @@ bool BaseAssembly::Initialize()
 		return false;
 	}
 
-    Mono_Quit = Mono::Exports::mono_class_get_method_from_name(klass, "Quit", NULL);
-    if (Mono_Quit == NULL)
+    Mono_Pause = Mono::Exports::mono_class_get_method_from_name(klass, "Pause", NULL);
+    if (Mono_Pause == NULL)
     {
-        Assertion::ThrowInternalFailure("Failed to Get Quit Method from Mono Class!");
+        Assertion::ThrowInternalFailure("Failed to Get Pause Method from Mono Class!");
         return false;
     }
 	
@@ -132,21 +132,15 @@ void BaseAssembly::Start()
 		Logger::WriteSpacer();
 }
 
-void BaseAssembly::Quit()
+void BaseAssembly::Pause()
 {
-    if (Mono_Quit == NULL)
-        return;
-    Debug::Msg("Quitting Base Assembly...");
-    Logger::WriteSpacer();
     Mono::Object* exObj = NULL;
-    Mono::Exports::mono_runtime_invoke(Mono_Quit, NULL, NULL, &exObj);
+    Mono::Exports::mono_runtime_invoke(Mono_Pause, NULL, NULL, &exObj);
     if (exObj != NULL)
     {
         Mono::LogException(exObj);
-        Assertion::ThrowInternalFailure("Failed to Invoke Quit Method!");
+        Assertion::ThrowInternalFailure("Failed to Invoke Pause Method!");
     }
-    Debug::Msg("Quit Base Assembly!");
-    Logger::WriteSpacer();
 }
 
 

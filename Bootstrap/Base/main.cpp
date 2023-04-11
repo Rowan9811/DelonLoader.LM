@@ -19,8 +19,8 @@ jboolean Java_com_melonloader_Bootstrap_Initialize(JNIEnv* env)
     return (jboolean)Core::Initialize();
 }
 
-void Java_com_melonloader_Bootstrap_OnExit(JNIEnv* env)
+void Java_com_melonloader_Bootstrap_OnPause(JNIEnv* env)
 {
-    BaseAssembly::Quit();
+    BaseAssembly::Pause();
 }
 }
