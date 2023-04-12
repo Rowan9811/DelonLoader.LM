@@ -12,7 +12,6 @@ mkdir -p "${BASE_DIR}/build/JavaBindings"
 mkdir -p "${BASE_DIR}/build/bundle_modules"
 
 cp "${BASE_DIR}/bin/build_deps/android.jar" "${BASE_DIR}/build/android_sdk.jar"
-#cp "${BASE_DIR}/bin/bundled_deps/EOSSDK.jar" "${BASE_DIR}/build/bundle_modules/EOSSDK.jar"
 
 # https://stackoverflow.com/a/17841619
 function join_by { local IFS="$1"; shift; echo "$*"; }
@@ -27,7 +26,6 @@ COMPILE_TIME_DEPS=(
   "${BASE_DIR}/deps/unity.jar"
   "${BASE_DIR}/build/bundle_modules/bhaptics_unity_bridge.jar"
   "${BASE_DIR}/build/bundle_modules/bhaptics_manager.jar"
-#  "${BASE_DIR}/build/bundle_modules/EOSSDK.jar"
 )
 
 javac \
