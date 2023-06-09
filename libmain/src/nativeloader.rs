@@ -9,11 +9,6 @@ use crate::utils::{libs::load_lib, self};
 
 #[no_mangle]
 fn load(env: JNIEnv, _: JClass, _: JString) -> jboolean {
-    /*let path: String = env
-        .get_string(&str)
-        .expect("Couldn't get java string!")
-        .into();*/
-
     let unity_lib = load_lib(&PathBuf::from("libunity.so"))
         .expect("Couldn't load libunity!");
 
