@@ -51,14 +51,58 @@ void AndroidData::GetDataDir()
     JNIEnv* env = Core::GetEnv();
 
     jclass unityClass = env->FindClass("com/unity3d/player/UnityPlayer");
+    if (unityClass == NULL) {
+        Assertion::ThrowInternalFailure("Failed to find class com/unity3d/player/UnityPlayer");
+        DataDir = nullptr;
+    }
+
     jfieldID currentActivityId = env->GetStaticFieldID(unityClass, "currentActivity", "Landroid/app/Activity;");
-    jobject currentActvityObj = env->GetStaticObjectField(unityClass, currentActivityId);
+    if (currentActivityId == NULL) {
+        Assertion::ThrowInternalFailure("Failed to get field ID currentActivity");
+        DataDir = nullptr;
+    }
+
+    jobject currentActivityObj = env->GetStaticObjectField(unityClass, currentActivityId);
+    if (currentActivityObj == NULL) {
+        Assertion::ThrowInternalFailure("Failed to get static object field currentActivity");
+        DataDir = nullptr;
+    }
+
     jclass activityClass = env->FindClass("android/app/Activity");
+    if (activityClass == NULL) {
+        Assertion::ThrowInternalFailure("Failed to find class android/app/Activity");
+        DataDir = nullptr;
+    }
+
     jmethodID getExtFilesId = env->GetMethodID(activityClass, "getExternalFilesDir", "(Ljava/lang/String;)Ljava/io/File;");
-    jobject extFileObj = env->CallObjectMethod(currentActvityObj, getExtFilesId, nullptr);
+    if (getExtFilesId == NULL) {
+        Assertion::ThrowInternalFailure("Failed to get method ID getExternalFilesDir");
+        DataDir = nullptr;
+    }
+
+    jobject extFileObj = env->CallObjectMethod(currentActivityObj, getExtFilesId, nullptr);
+    if (extFileObj == NULL) {
+        Assertion::ThrowInternalFailure("Failed to invoke getExternalFilesDir()");
+        DataDir = nullptr;
+    }
+
     jclass fileClass = env->FindClass("java/io/File");
+    if (fileClass == NULL) {
+        Assertion::ThrowInternalFailure("Failed to find class java/io/File");
+        DataDir = nullptr;
+    }
+
     jmethodID toStringId = env->GetMethodID(fileClass, "toString", "()Ljava/lang/String;");
+    if (toStringId == NULL) {
+        Assertion::ThrowInternalFailure("Failed to get method ID toString");
+        DataDir = nullptr;
+    }
+
     jstring fileString = (jstring)env->CallObjectMethod(extFileObj, toStringId);
+    if (fileString == NULL) {
+        Assertion::ThrowInternalFailure("Failed to invoke toString()");
+        DataDir = nullptr;
+    }
 
     std::string str = jstring2string(env, fileString);
 
