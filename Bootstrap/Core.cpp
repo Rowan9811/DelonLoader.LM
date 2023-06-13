@@ -81,6 +81,10 @@ bool Core::Inject()
                     Console::Initialize
             },
             {
+                    "Initializing Android data",
+                    AndroidData::Initialize
+            },
+            {
                     "Initializing Logging Service",
                     Logger::Initialize
             },
@@ -93,10 +97,6 @@ bool Core::Initialize()
 {
     std::vector<Sequence::Element> Sequence = {
 #ifdef __ANDROID__
-            {
-                    "Initializing Android data",
-                    AndroidData::Initialize
-            },
             {
                     "Loading Asset Manager",
                     AssetManagerHelper::Initialize

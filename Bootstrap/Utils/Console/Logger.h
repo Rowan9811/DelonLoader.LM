@@ -79,7 +79,5 @@ private:
     static const std::string FilePrefix;
     static void CleanOldLogs(const std::string& logFolderPath);
     static std::string CleanAndGetFile();
-    static std::string jstring2string(JNIEnv *env, jstring jStr);
-    static std::string GetBasePath();
     static bool CompareWritetime(const std::filesystem::directory_entry& first, const std::filesystem::directory_entry& second) { return first.last_write_time().time_since_epoch() >= second.last_write_time().time_since_epoch(); }
 };

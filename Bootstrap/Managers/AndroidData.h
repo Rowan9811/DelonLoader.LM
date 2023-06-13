@@ -1,4 +1,8 @@
 #pragma once
+
+#include <jni.h>
+#include <string>
+
 class AndroidData
 {
 public:
@@ -10,5 +14,6 @@ private:
 	static void GetBaseDataDir();
 	static void GetAppName();
 	static void GetDataDir();
+    static std::string jstring2string(JNIEnv *env, jstring jStr);
 };
 

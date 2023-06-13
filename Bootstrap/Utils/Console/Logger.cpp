@@ -3,6 +3,7 @@
 #include "Debug.h"
 #include "../../Managers/Game.h"
 #include "../../Core.h"
+#include "../../Managers/AndroidData.h"
 #include <stdio.h>
 
 #ifdef _WIN32
@@ -72,7 +73,7 @@ bool Logger::Initialize()
 }
 
 std::string Logger::CleanAndGetFile() {
-    std::string basePath = GetBasePath();
+    std::string basePath = AndroidData::DataDir;
     std::string mlPath("/melonloader/etc/logs");
     std::string logFolderPath = basePath + mlPath;
 
@@ -232,39 +233,4 @@ void Logger::Internal_Error(const char* namesection, const char* txt)
         return;
 
     LogToConsoleAndFile(Log(Error, namesection, txt));
-}
-
-std::string Logger::GetBasePath() {
-    JNIEnv* env = Core::GetEnv();
-
-    jclass unityClass = env->FindClass("com/unity3d/player/UnityPlayer");
-    jfieldID currentActivityId = env->GetStaticFieldID(unityClass, "currentActivity", "Landroid/app/Activity;");
-    jobject currentActvityObj = env->GetStaticObjectField(unityClass, currentActivityId);
-    jclass activityClass = env->FindClass("android/app/Activity");
-    jmethodID getExtFilesId = env->GetMethodID(activityClass, "getExternalFilesDir", "(Ljava/lang/String;)Ljava/io/File;");
-    jobject extFileObj = env->CallObjectMethod(currentActvityObj, getExtFilesId, nullptr);
-    jclass fileClass = env->FindClass("java/io/File");
-    jmethodID toStringId = env->GetMethodID(fileClass, "toString", "()Ljava/lang/String;");
-    jstring fileString = (jstring)env->CallObjectMethod(extFileObj, toStringId);
-
-    return jstring2string(env, fileString);
-}
-
-std::string Logger::jstring2string(JNIEnv *env, jstring jStr) {
-    if (!jStr)
-        return "";
-
-    const jclass stringClass = env->GetObjectClass(jStr);
-    const jmethodID getBytes = env->GetMethodID(stringClass, "getBytes", "(Ljava/lang/String;)[B");
-    const jbyteArray stringJbytes = (jbyteArray) env->CallObjectMethod(jStr, getBytes, env->NewStringUTF("UTF-8"));
-
-    size_t length = (size_t) env->GetArrayLength(stringJbytes);
-    jbyte* pBytes = env->GetByteArrayElements(stringJbytes, NULL);
-
-    std::string ret = std::string((char *)pBytes, length);
-    env->ReleaseByteArrayElements(stringJbytes, pBytes, JNI_ABORT);
-
-    env->DeleteLocalRef(stringJbytes);
-    env->DeleteLocalRef(stringClass);
-    return ret;
 }

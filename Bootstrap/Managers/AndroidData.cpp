@@ -7,6 +7,7 @@
 #include <string>
 #include <sys/stat.h>
 #include <fcntl.h>
+#include <vector>
 
 #include "../Utils/Console/Debug.h"
 #include "../Utils/Assertion.h"
@@ -47,31 +48,42 @@ void AndroidData::GetAppName()
 
 void AndroidData::GetDataDir()
 {
-    auto env = Core::GetEnv();
+    JNIEnv* env = Core::GetEnv();
 
-    auto klass = env->FindClass("com/melonloader/ApplicationState");
-    if (klass == nullptr) {
-        Assertion::ThrowInternalFailure("Failed to find com/melonloader/ApplicationState");
-        return;
-    }
+    jclass unityClass = env->FindClass("com/unity3d/player/UnityPlayer");
+    jfieldID currentActivityId = env->GetStaticFieldID(unityClass, "currentActivity", "Landroid/app/Activity;");
+    jobject currentActvityObj = env->GetStaticObjectField(unityClass, currentActivityId);
+    jclass activityClass = env->FindClass("android/app/Activity");
+    jmethodID getExtFilesId = env->GetMethodID(activityClass, "getExternalFilesDir", "(Ljava/lang/String;)Ljava/io/File;");
+    jobject extFileObj = env->CallObjectMethod(currentActvityObj, getExtFilesId, nullptr);
+    jclass fileClass = env->FindClass("java/io/File");
+    jmethodID toStringId = env->GetMethodID(fileClass, "toString", "()Ljava/lang/String;");
+    jstring fileString = (jstring)env->CallObjectMethod(extFileObj, toStringId);
 
-    auto fieldId = env->GetStaticFieldID(klass, "BaseDirectory", "Ljava/lang/String;");
-    if (fieldId == nullptr) {
-        Assertion::ThrowInternalFailure("Failed to find com/melonloader/ApplicationState::BaseDirectory");
-        return;
-    }
+    std::string str = jstring2string(env, fileString);
 
-    auto jStr = env->GetStaticObjectField(klass, fieldId);
-    if (jStr == nullptr) {
-        Assertion::ThrowInternalFailure("com.melonloader.ApplicationState::BaseDirectory is null");
-        return;
-    }
+    env->DeleteLocalRef(extFileObj);
+    env->DeleteLocalRef(fileString);
 
-    const char* cStr = env->GetStringUTFChars((jstring)jStr, nullptr);
-    const size_t cStrSize = strlen(cStr);
-    DataDir = new char[cStrSize + 1];
-    std::strcpy(DataDir, cStr);
-    DataDir[cStrSize] = '\0';
+    std::vector<char> dataVector(str.c_str(), str.c_str() + str.size() + 1);
+    DataDir = (char *)(&dataVector[0]);
+}
 
-    env->DeleteLocalRef(jStr);
+std::string AndroidData::jstring2string(JNIEnv *env, jstring jStr) {
+    if (!jStr)
+        return "";
+
+    const jclass stringClass = env->GetObjectClass(jStr);
+    const jmethodID getBytes = env->GetMethodID(stringClass, "getBytes", "(Ljava/lang/String;)[B");
+    const jbyteArray stringJbytes = (jbyteArray) env->CallObjectMethod(jStr, getBytes, env->NewStringUTF("UTF-8"));
+
+    size_t length = (size_t) env->GetArrayLength(stringJbytes);
+    jbyte* pBytes = env->GetByteArrayElements(stringJbytes, NULL);
+
+    std::string ret = std::string((char *)pBytes, length);
+    env->ReleaseByteArrayElements(stringJbytes, pBytes, JNI_ABORT);
+
+    env->DeleteLocalRef(stringJbytes);
+    env->DeleteLocalRef(stringClass);
+    return ret;
 }
