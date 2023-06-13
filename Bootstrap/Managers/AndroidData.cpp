@@ -16,6 +16,7 @@
 char* AndroidData::BaseDataDir = "/storage/emulated/0/Android/data";
 char* AndroidData::AppName = NULL;
 char* AndroidData::DataDir = NULL;
+jobject AndroidData::CurrentActivity = nullptr;
 
 bool AndroidData::Initialize()
 {
@@ -67,6 +68,8 @@ void AndroidData::GetDataDir()
         Assertion::ThrowInternalFailure("Failed to get static object field currentActivity");
         DataDir = nullptr;
     }
+
+    CurrentActivity = currentActivityObj;
 
     jclass activityClass = env->FindClass("android/app/Activity");
     if (activityClass == NULL) {

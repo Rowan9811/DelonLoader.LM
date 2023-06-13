@@ -9,6 +9,7 @@ public:
 	static char* BaseDataDir;
 	static char* AppName;
 	static char* DataDir;
+    static jobject CurrentActivity;
 	static bool Initialize();
 private:
 	static void GetBaseDataDir();

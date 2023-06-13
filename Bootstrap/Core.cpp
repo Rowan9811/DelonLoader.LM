@@ -28,6 +28,7 @@
 #include "./Managers/StaticSettings.h"
 #include "./Utils/AssemblyUnhollower/XrefScannerBindings.h"
 #include "Managers/BHapticsBridge.h"
+#include "Utils/AssetHelper.h"
 
 #endif
 
@@ -85,6 +86,14 @@ bool Core::Inject()
                     AndroidData::Initialize
             },
             {
+                    "Loading Asset Manager",
+                    AssetManagerHelper::Initialize
+            },
+            {
+                    "Copying Melon assets",
+                    AssetHelper::CopyMelon
+            },
+            {
                     "Initializing Logging Service",
                     Logger::Initialize
             },
@@ -97,10 +106,6 @@ bool Core::Initialize()
 {
     std::vector<Sequence::Element> Sequence = {
 #ifdef __ANDROID__
-            {
-                    "Loading Asset Manager",
-                    AssetManagerHelper::Initialize
-            },
             {
                     "Loading Static Settings",
                     StaticSettings::Initialize
