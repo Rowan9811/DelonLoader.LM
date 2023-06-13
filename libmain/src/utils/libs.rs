@@ -20,7 +20,10 @@
 //! let func: extern fn() = unsafe { mem::transmute(lib.get_fn_ptr("func_name")?) };
 
 use std::{
-    ffi::c_void,
+    ffi::{
+        c_void,
+        c_int
+    },
     marker::PhantomData,
     ops::Deref,
     path::{Path, PathBuf},
@@ -129,8 +132,8 @@ impl NativeLibrary {
 ///
 /// assert!(lib.is_ok());
 #[cfg(not(target_os = "windows"))]
-pub fn load_lib<P: AsRef<Path>>(path: P) -> Result<NativeLibrary, LibError> {
-    use std::ffi::CString;
+pub fn load_lib<P: AsRef<Path>>(path: P, rtld: c_int) -> Result<NativeLibrary, LibError> {
+    use std::ffi::{CString};
 
     let path = path.as_ref();
 
@@ -138,7 +141,7 @@ pub fn load_lib<P: AsRef<Path>>(path: P) -> Result<NativeLibrary, LibError> {
 
     let c_path = CString::new(path_string).map_err(|_| LibError::FailedToCreateCString)?;
 
-    let lib = unsafe { libc::dlopen(c_path.as_ptr(), libc::RTLD_NOW | libc::RTLD_GLOBAL) };
+    let lib = unsafe { libc::dlopen(c_path.as_ptr(), rtld) };
 
     if lib.is_null() {
         return Err(LibError::FailedToLoadLib);

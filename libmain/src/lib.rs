@@ -23,7 +23,7 @@ pub extern "system" fn JNI_OnLoad(vm: JavaVM, _: *mut c_void) -> jint {
     vm.attach_current_thread()
         .expect("Unable to attach current thread to the JVM");
 
-    let self_lib = load_lib(&PathBuf::from("libmain.so"))
+    let self_lib = load_lib(&PathBuf::from("libmain.so"), libc::RTLD_NOW | libc::RTLD_GLOBAL)
         .expect("Failed to load self");
 
     let load_handle: utils::libs::NativeMethod<fn(JNIEnv, JClass, JString) -> jboolean> =

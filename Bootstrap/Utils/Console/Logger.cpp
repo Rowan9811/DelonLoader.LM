@@ -17,11 +17,13 @@
 #include <iostream>
 #include <shared_mutex>
 #include <filesystem>
+#include <vector>
+
 namespace fs = std::filesystem;
 
-const char* Logger::FilePrefix = "MelonLoader_";
-const char* Logger::FileExtension = ".log";
-const char* Logger::LatestLogFileName = "Latest";
+const std::string Logger::FilePrefix = "MelonLoader_";
+const std::string Logger::FileExtension = ".log";
+const std::string Logger::LatestLogFileName = "Latest";
 int Logger::MaxLogs = 10;
 int Logger::MaxWarnings = 100;
 int Logger::MaxErrors = 100;
@@ -41,7 +43,7 @@ bool Logger::Initialize()
 
 #ifdef __ANDROID__
     std::string timeStamp = GetTimestamp("%y-%m-%d_%OH-%OM-%OS");
-    std::string baseFilePath = JavaInitialize();
+    std::string baseFilePath = CleanAndGetFile();
     LogFile.coss = std::ofstream(baseFilePath + "/logs/" + FilePrefix + timeStamp + FileExtension);
     LogFile.latest = std::ofstream(baseFilePath + "/" + LatestLogFileName + FileExtension);
 #else
@@ -69,52 +71,50 @@ bool Logger::Initialize()
 	return true;
 }
 
-std::string Logger::JavaInitialize()
-{
-    auto env = Core::GetEnv();
+std::string Logger::CleanAndGetFile() {
+    std::string basePath = GetBasePath();
+    std::string mlPath("/melonloader/etc/logs");
+    std::string logFolderPath = basePath + mlPath;
 
-    jclass jCore = env->FindClass("com/melonloader/helpers/nativehelpers/Logger");
-    if (jCore == NULL)
-    {
-        Assertion::ThrowInternalFailure("Failed to find class com.melonloader.helpers.nativehelpers.Logger");
-        return "";
-    }
+    if (!std::filesystem::exists(logFolderPath)) {
+        if (!std::filesystem::create_directory(logFolderPath))
+            Assertion::ThrowInternalFailure("Failed to Create Logs Folder!");
+    } else
+        CleanOldLogs(logFolderPath);
 
-    jmethodID mid = env->GetStaticMethodID(jCore, "Initialize", "(I)Ljava/lang/String;");
-    if (mid == NULL)
-    {
-        Assertion::ThrowInternalFailure("Failed to find method com.melonloader.helpers.nativehelpers.Logger.Initialize()");
-        return "";
-    }
+    std::string melonloaderPath = logFolderPath.substr(0, logFolderPath.find_last_of('/')) + "/" + LatestLogFileName + FileExtension;
+    if (std::filesystem::exists(melonloaderPath))
+        std::filesystem::remove(melonloaderPath);
 
-    jobject jObj = env->CallStaticObjectMethod(jCore, mid, MaxLogs);
-    if (jObj == NULL)
-    {
-        Assertion::ThrowInternalFailure("Failed to invoke com.melonloader.helpers.nativehelpers.Logger.Initialize()");
-        return "";
-    }
-
-    std::string filePath = jstring2string(env, (jstring)jObj);
-    return filePath;
+    return logFolderPath.substr(0, logFolderPath.find_last_of('/'));
 }
 
-std::string Logger::jstring2string(JNIEnv *env, jstring jStr) {
-    if (!jStr)
-        return "";
+void Logger::CleanOldLogs(const std::string& logFolderPath) {
+    try {
+        if (MaxLogs <= 0)
+            return;
 
-    const jclass stringClass = env->GetObjectClass(jStr);
-    const jmethodID getBytes = env->GetMethodID(stringClass, "getBytes", "(Ljava/lang/String;)[B");
-    const jbyteArray stringJbytes = (jbyteArray) env->CallObjectMethod(jStr, getBytes, env->NewStringUTF("UTF-8"));
-
-    size_t length = (size_t) env->GetArrayLength(stringJbytes);
-    jbyte* pBytes = env->GetByteArrayElements(stringJbytes, NULL);
-
-    std::string ret = std::string((char *)pBytes, length);
-    env->ReleaseByteArrayElements(stringJbytes, pBytes, JNI_ABORT);
-
-    env->DeleteLocalRef(stringJbytes);
-    env->DeleteLocalRef(stringClass);
-    return ret;
+        std::vector<std::string> logFiles;
+        for (const auto& entry : std::filesystem::directory_iterator(logFolderPath)) {
+            if (!entry.is_regular_file())
+                continue;
+            std::string fileName = entry.path().filename().string();
+            if (fileName.find(FilePrefix) == 0 && fileName.find(FileExtension) == fileName.size() - FileExtension.size())
+                logFiles.push_back(entry.path());
+        }
+        if (logFiles.size() < MaxLogs)
+            return;
+        std::sort(logFiles.begin(), logFiles.end(), [](const std::string& a, const std::string& b) {
+            return std::filesystem::last_write_time(a) < std::filesystem::last_write_time(b);
+        });
+        int logsToDelete = logFiles.size() - MaxLogs;
+        for (int i = 0; i < logsToDelete; i++) {
+            std::filesystem::remove(logFiles[i]);
+        }
+    } catch (const std::exception& e) {
+        std::cerr << "Failed to clean log folder!\n";
+        std::cerr << e.what() << '\n';
+    }
 }
 
 std::string Logger::GetTimestamp(std::string format)
@@ -138,28 +138,6 @@ void Logger::LogToConsoleAndFile(Log log)
 #endif
     LogFile << log.BuildLogString();
     WriteSpacer();
-}
-
-void Logger::CleanOldLogs(const char* path)
-{
-#ifndef __ANDROID__
-    if (MaxLogs <= 0)
-        return;
-    std::list<std::filesystem::directory_entry>entry_list;
-    for (std::filesystem::directory_entry entry : std::filesystem::directory_iterator(path))
-    {
-        if (!entry.is_regular_file())
-            continue;
-        std::string entry_file = entry.path().filename().generic_string();
-        if ((entry_file.rfind(FilePrefix, NULL) == NULL) && (entry_file.rfind(FileExtension) == (entry_file.size() - std::string(FileExtension).size())))
-            entry_list.push_back(entry);
-    }
-    if (entry_list.size() < MaxLogs)
-        return;
-    entry_list.sort(Logger::CompareWritetime);
-    for (std::list<std::filesystem::directory_entry>::iterator it = std::next(entry_list.begin(), (MaxLogs - 1)); it != entry_list.end(); ++it)
-        remove((*it).path().u8string().c_str());
-#endif
 }
 
 void Logger::WriteSpacer()
@@ -254,4 +232,39 @@ void Logger::Internal_Error(const char* namesection, const char* txt)
         return;
 
     LogToConsoleAndFile(Log(Error, namesection, txt));
+}
+
+std::string Logger::GetBasePath() {
+    JNIEnv* env = Core::GetEnv();
+
+    jclass unityClass = env->FindClass("com/unity3d/player/UnityPlayer");
+    jfieldID currentActivityId = env->GetStaticFieldID(unityClass, "currentActivity", "Landroid/app/Activity;");
+    jobject currentActvityObj = env->GetStaticObjectField(unityClass, currentActivityId);
+    jclass activityClass = env->FindClass("android/app/Activity");
+    jmethodID getExtFilesId = env->GetMethodID(activityClass, "getExternalFilesDir", "(Ljava/lang/String;)Ljava/io/File;");
+    jobject extFileObj = env->CallObjectMethod(currentActvityObj, getExtFilesId, nullptr);
+    jclass fileClass = env->FindClass("java/io/File");
+    jmethodID toStringId = env->GetMethodID(fileClass, "toString", "()Ljava/lang/String;");
+    jstring fileString = (jstring)env->CallObjectMethod(extFileObj, toStringId);
+
+    return jstring2string(env, fileString);
+}
+
+std::string Logger::jstring2string(JNIEnv *env, jstring jStr) {
+    if (!jStr)
+        return "";
+
+    const jclass stringClass = env->GetObjectClass(jStr);
+    const jmethodID getBytes = env->GetMethodID(stringClass, "getBytes", "(Ljava/lang/String;)[B");
+    const jbyteArray stringJbytes = (jbyteArray) env->CallObjectMethod(jStr, getBytes, env->NewStringUTF("UTF-8"));
+
+    size_t length = (size_t) env->GetArrayLength(stringJbytes);
+    jbyte* pBytes = env->GetByteArrayElements(stringJbytes, NULL);
+
+    std::string ret = std::string((char *)pBytes, length);
+    env->ReleaseByteArrayElements(stringJbytes, pBytes, JNI_ABORT);
+
+    env->DeleteLocalRef(stringJbytes);
+    env->DeleteLocalRef(stringClass);
+    return ret;
 }
