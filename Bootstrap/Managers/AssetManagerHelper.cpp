@@ -8,28 +8,14 @@ bool AssetManagerHelper::Initialize()
 {
     auto env = Core::GetEnv();
 
-    jclass jCore = env->FindClass("com/melonloader/Core");
-    if (jCore == NULL)
-    {
-        Assertion::ThrowInternalFailure("Failed to find class com.melonloader.Core");
-        return false;
-    }
-
-    jmethodID mid = env->GetStaticMethodID(jCore, "GetAssetManager", "()Landroid/content/res/AssetManager;");
-    if (mid == NULL)
-    {
-        Assertion::ThrowInternalFailure("Failed to find method com.melonloader.Core.GetAssetManager()");
-        return false;
-    }
-
-    jobject jAM = env->CallStaticObjectMethod(jCore, mid);
-    if (jAM == NULL)
-    {
-        Assertion::ThrowInternalFailure("Failed to invoke com.melonloader.Core.GetAssetManager()");
-        return false;
-    }
+    jclass unityClass = env->FindClass("com/unity3d/player/UnityPlayer");
+    jfieldID currentActivityId = env->GetStaticFieldID(unityClass, "currentActivity", "Landroid/app/Activity;");
+    jobject currentActvityObj = env->GetStaticObjectField(unityClass, currentActivityId);
+    jclass activityClass = env->FindClass("android/app/Activity");
+    jmethodID getAssetId = env->GetMethodID(activityClass, "getAssets", "()Landroid/content/res/AssetManager;");
+    jobject assetManagerObj = env->CallObjectMethod(currentActvityObj, getAssetId);
     
-    Instance = AAssetManager_fromJava(env, jAM);
+    Instance = AAssetManager_fromJava(env, assetManagerObj);
     if (Instance == NULL)
     {
         Assertion::ThrowInternalFailure("Failed to create AssetManager instance");

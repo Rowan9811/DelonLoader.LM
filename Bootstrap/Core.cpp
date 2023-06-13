@@ -106,10 +106,10 @@ bool Core::Initialize()
                     StaticSettings::Initialize
             },
 #endif
-            {
-                "Initializing bHaptics",
-                BHapticsBridge::Initialize,
-            },
+            //{
+            //    "Initializing bHaptics",
+            //    BHapticsBridge::Initialize,
+            //},
             {
                     "Loading basic game info",
                     Game::Initialize

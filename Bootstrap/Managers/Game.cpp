@@ -9,6 +9,7 @@
 #include "../Utils/Encoding.h"
 #include "../Utils/Console/Debug.h"
 #include "AndroidData.h"
+#include "AssetManagerHelper.h"
 #include <string.h>
 //#pragma comment(lib,"version.lib")
 
@@ -234,22 +235,7 @@ std::string Game::ReadUnityVersionFromGlobalGameManagers()
 	std::vector<char> filedata((std::istreambuf_iterator<char>(globalgamemanagersstream)), (std::istreambuf_iterator<char>()));
 	globalgamemanagersstream.close();
 #elif defined(__ANDROID__)
-    auto env = Core::GetEnv();
-
-	jclass jCore = env->FindClass("com/melonloader/Core");
-	if (jCore == NULL)
-		return std::string();
-
-	jmethodID mid = env->GetStaticMethodID(jCore, "GetAssetManager", "()Landroid/content/res/AssetManager;");
-	if (mid == NULL)
-		return std::string();
-
-	jobject jAM = env->CallStaticObjectMethod(jCore, mid);
-	AAssetManager* am = AAssetManager_fromJava(env, jAM);
-	if (am == NULL)
-		return std::string();
-
-	AAsset* asset = AAssetManager_open(am, "bin/Data/globalgamemanagers", AASSET_MODE_BUFFER);
+	AAsset* asset = AAssetManager_open(AssetManagerHelper::Instance, "bin/Data/globalgamemanagers", AASSET_MODE_BUFFER);
 	if (asset == NULL)
 		return std::string();
 	
@@ -314,20 +300,7 @@ std::string Game::ReadUnityVersionFromMainData()
 	maindatastream.close();
 #elif defined(__ANDROID__)
 #define STARTING_INDEX 0x12
-	jclass jCore = Core::Env->FindClass("com/melonloader/Core");
-	if (jCore == NULL)
-		return std::string();
-
-	jmethodID mid = Core::Env->GetStaticMethodID(jCore, "GetAssetManager", "()Landroid/content/res/AssetManager;");
-	if (mid == NULL)
-		return std::string();
-
-	jobject jAM = Core::Env->CallStaticObjectMethod(jCore, mid);
-	AAssetManager* am = AAssetManager_fromJava(Core::Env, jAM);
-	if (am == NULL)
-		return std::string();
-
-	AAsset* asset = AAssetManager_open(am, "bin/Data/data.unity3d", AASSET_MODE_BUFFER);
+	AAsset* asset = AAssetManager_open(AssetManagerHelper::Instance, "bin/Data/data.unity3d", AASSET_MODE_BUFFER);
 	if (asset == NULL)
 		return std::string();
 
