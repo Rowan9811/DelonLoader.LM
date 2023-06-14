@@ -1,1 +1,0 @@
-There are just here because it made it easier for me to compile it though WSL
