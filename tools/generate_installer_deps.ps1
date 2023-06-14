@@ -40,7 +40,6 @@ if (Test-Path "installer_deps") {
 New-Item -ItemType Directory -Name "installer_deps"
 New-Item -ItemType Directory -Name "installer_deps\assembly_generation"
 New-Item -ItemType Directory -Name "installer_deps\core"
-New-Item -ItemType Directory -Name "installer_deps\dex"
 New-Item -ItemType Directory -Name "installer_deps\support_modules"
 Copy-Item -Path "installer_deps_required\*" -Destination "installer_deps" -Recurse
 
@@ -73,16 +72,15 @@ Copy-Item `
     -Destination "installer_deps\managed"
 
 Write-Host "Done`n"
-Write-Host "Building JavaBindings..."
+Write-Host "Building libmain..."
 
-# Build JavaBindings
-Start-Process -FilePath "bash.exe" -ArgumentList @("-c `"dos2unix ../JavaBindings/bin/build.sh`"") -Wait -NoNewWindow
-Start-Process -FilePath "bash.exe" -ArgumentList @("-c ../JavaBindings/bin/build.sh") -Wait -NoNewWindow
+# Build libmain
+Start-Process -FilePath "$baseMlPath\libmain\build.bat" -ArgumentList "auto" -Wait -WorkingDirectory "$baseMlPath\libmain\"
 
-# Copy dex
+# Copy libmain
 Copy-Item `
-    -Path "$baseMlPath\JavaBindings\build\dex\classes.dex" `
-    -Destination "installer_deps\dex"
+    -Path "$baseMlPath\libmain\jniLibs\arm64-v8a\libmain.so" `
+    -Destination "installer_deps\native"
 
 Write-Host "Done`n"
 Write-Host "Building Bootstrap..."
