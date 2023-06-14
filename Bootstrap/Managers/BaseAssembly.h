@@ -19,5 +19,4 @@ public:
 private:
 	static Mono::Method* Mono_PreStart;
 	static Mono::Method* Mono_Start;
-    static Mono::Method* Mono_Pause;
 };

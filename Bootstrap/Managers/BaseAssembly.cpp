@@ -10,7 +10,6 @@ char* BaseAssembly::PathMono = NULL;
 char* BaseAssembly::PreloadPath = NULL;
 Mono::Method* BaseAssembly::Mono_PreStart = NULL;
 Mono::Method* BaseAssembly::Mono_Start = NULL;
-Mono::Method* BaseAssembly::Mono_Pause = NULL;
 Mono::Assembly* BaseAssembly::Assembly = NULL;
 Mono::Image* BaseAssembly::Image = NULL;
 
@@ -61,13 +60,6 @@ bool BaseAssembly::Initialize()
 		Assertion::ThrowInternalFailure("Failed to Get Start Method from Mono Class!");
 		return false;
 	}
-
-    Mono_Pause = Mono::Exports::mono_class_get_method_from_name(klass, "Pause", NULL);
-    if (Mono_Pause == NULL)
-    {
-        Assertion::ThrowInternalFailure("Failed to Get Pause Method from Mono Class!");
-        return false;
-    }
 	
 	Logger::WriteSpacer();
 	Mono::Object* exObj = NULL;

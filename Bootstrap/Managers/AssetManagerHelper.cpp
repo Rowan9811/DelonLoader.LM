@@ -8,28 +8,43 @@ bool AssetManagerHelper::Initialize()
 {
     auto env = Core::GetEnv();
 
-    jclass jCore = env->FindClass("com/melonloader/Core");
-    if (jCore == NULL)
-    {
-        Assertion::ThrowInternalFailure("Failed to find class com.melonloader.Core");
+    jclass unityClass = env->FindClass("com/unity3d/player/UnityPlayer");
+    if (unityClass == NULL) {
+        Assertion::ThrowInternalFailure("Failed to find class com/unity3d/player/UnityPlayer");
         return false;
     }
 
-    jmethodID mid = env->GetStaticMethodID(jCore, "GetAssetManager", "()Landroid/content/res/AssetManager;");
-    if (mid == NULL)
-    {
-        Assertion::ThrowInternalFailure("Failed to find method com.melonloader.Core.GetAssetManager()");
+    jfieldID currentActivityId = env->GetStaticFieldID(unityClass, "currentActivity", "Landroid/app/Activity;");
+    if (currentActivityId == NULL) {
+        Assertion::ThrowInternalFailure("Failed to get field ID currentActivity");
         return false;
     }
 
-    jobject jAM = env->CallStaticObjectMethod(jCore, mid);
-    if (jAM == NULL)
-    {
-        Assertion::ThrowInternalFailure("Failed to invoke com.melonloader.Core.GetAssetManager()");
+    jobject currentActivityObj = env->GetStaticObjectField(unityClass, currentActivityId);
+    if (currentActivityObj == NULL) {
+        Assertion::ThrowInternalFailure("Failed to get static object field currentActivity");
+        return false;
+    }
+
+    jclass activityClass = env->FindClass("android/app/Activity");
+    if (activityClass == NULL) {
+        Assertion::ThrowInternalFailure("Failed to find class android/app/Activity");
+        return false;
+    }
+
+    jmethodID getAssetId = env->GetMethodID(activityClass, "getAssets", "()Landroid/content/res/AssetManager;");
+    if (getAssetId == NULL) {
+        Assertion::ThrowInternalFailure("Failed to get method ID getAssets");
+        return false;
+    }
+
+    jobject assetManagerObj = env->CallObjectMethod(currentActivityObj, getAssetId);
+    if (assetManagerObj == NULL) {
+        Assertion::ThrowInternalFailure("Failed to invoke getAssets()");
         return false;
     }
     
-    Instance = AAssetManager_fromJava(env, jAM);
+    Instance = AAssetManager_fromJava(env, assetManagerObj);
     if (Instance == NULL)
     {
         Assertion::ThrowInternalFailure("Failed to create AssetManager instance");

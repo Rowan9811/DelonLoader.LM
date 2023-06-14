@@ -28,6 +28,7 @@
 #include "./Managers/StaticSettings.h"
 #include "./Utils/AssemblyUnhollower/XrefScannerBindings.h"
 #include "Managers/BHapticsBridge.h"
+#include "Utils/AssetHelper.h"
 
 #endif
 
@@ -81,6 +82,18 @@ bool Core::Inject()
                     Console::Initialize
             },
             {
+                    "Initializing Android data",
+                    AndroidData::Initialize
+            },
+            {
+                    "Loading Asset Manager",
+                    AssetManagerHelper::Initialize
+            },
+            {
+                    "Copying Melon assets",
+                    AssetHelper::CopyMelon
+            },
+            {
                     "Initializing Logging Service",
                     Logger::Initialize
             },
@@ -94,22 +107,14 @@ bool Core::Initialize()
     std::vector<Sequence::Element> Sequence = {
 #ifdef __ANDROID__
             {
-                    "Initializing Android data",
-                    AndroidData::Initialize
-            },
-            {
-                    "Loading Asset Manager",
-                    AssetManagerHelper::Initialize
-            },
-            {
                     "Loading Static Settings",
                     StaticSettings::Initialize
             },
 #endif
-            {
-                "Initializing bHaptics",
-                BHapticsBridge::Initialize,
-            },
+            //{
+            //    "Initializing bHaptics",
+            //    BHapticsBridge::Initialize,
+            //},
             {
                     "Loading basic game info",
                     Game::Initialize

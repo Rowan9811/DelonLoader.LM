@@ -8,7 +8,7 @@
 #include "./Console.h"
 #include "Log.h"
 #include "../Encoding.h"
-
+namespace fs = std::filesystem;
 
 class Logger
 {
@@ -72,13 +72,12 @@ public:
     static FileStream LogFile;
     static void Flush() { LogFile.Flush(); }
 
-    static const char* LatestLogFileName;
-    static const char* FileExtension;
+    static const std::string LatestLogFileName;
+    static const std::string FileExtension;
 
 private:
-    static const char* FilePrefix;
-    static void CleanOldLogs(const char* path);
-    static std::string JavaInitialize();
-    static std::string jstring2string(JNIEnv *env, jstring jStr);
+    static const std::string FilePrefix;
+    static void CleanOldLogs(const std::string& logFolderPath);
+    static std::string CleanAndGetFile();
     static bool CompareWritetime(const std::filesystem::directory_entry& first, const std::filesystem::directory_entry& second) { return first.last_write_time().time_since_epoch() >= second.last_write_time().time_since_epoch(); }
 };
