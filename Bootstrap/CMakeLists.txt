@@ -89,6 +89,8 @@ endif()
 
 if(DEFINED USE_DOBBY)
     set(DOBBY_GENERATE_SHARED ON)
+    set(FullFloatingPointRegisterPack ON)
+    set(Plugin.ImportTableReplace ON)
     set(DOBBY_DEBUG ON)
     set(NearBranch ON)
 
@@ -96,7 +98,7 @@ if(DEFINED USE_DOBBY)
     add_subdirectory("./external/Dobby" Dobby)
 
     get_property(FC_LINK_LIBRARIES TARGET dobby PROPERTY LINK_LIBRARIES)
-    set_property(TARGET dobby PROPERTY LINK_LIBRARIES dl)
+    set_property(TARGET dobby PROPERTY LINK_LIBRARIES dl log android)
 endif()
 
 #if (CMAKE_BUILD_TYPE EQUAL "Debug")
