@@ -13,6 +13,7 @@ bool AssetHelper::CopyMelon() {
         std::string base = std::string(AndroidData::DataDir);
         // The + "/" is required for this to function. It breaks everything otherwise. Do not ask why, I do not know.
         CopyFileOrDir("melonloader", base + "/");
+        CopyFileOrDir("bin/Data/Managed/etc", base + "/il2cpp/", "etc");
         return true;
     }
     catch (...) {
@@ -58,6 +59,54 @@ void AssetHelper::CopyFileOrDir(const std::string& path, const std::string& base
             env->ReleaseStringUTFChars(asset, assetStr);
 
             CopyFileOrDir(assetPath, base);
+        }
+    }
+
+    // Release local references
+    env->DeleteLocalRef(assetManagerClass);
+    env->DeleteLocalRef(contextClass);
+    env->DeleteLocalRef(pathString);
+    env->DeleteLocalRef(baseString);
+}
+
+void AssetHelper::CopyFileOrDir(const std::string& path, const std::string& base, const std::string& pathStart) {
+    JNIEnv *env = Core::GetEnv();
+
+    jobject context = AndroidData::CurrentActivity;
+
+    jclass contextClass = env->GetObjectClass(context);
+    jmethodID getAssetsMethod = env->GetMethodID(contextClass, "getAssets", "()Landroid/content/res/AssetManager;");
+    jobject assetManager = env->CallObjectMethod(context, getAssetsMethod);
+
+    // Convert path and base to jstring
+    jstring pathString = env->NewStringUTF(path.c_str());
+    jstring baseString = env->NewStringUTF(base.c_str());
+
+    // Access the list method of AssetManager to get assets array
+    jclass assetManagerClass = env->GetObjectClass(assetManager);
+    jmethodID listMethod = env->GetMethodID(assetManagerClass, "list", "(Ljava/lang/String;)[Ljava/lang/String;");
+    jobjectArray assetsArray = (jobjectArray)env->CallObjectMethod(assetManager, listMethod, pathString);
+
+    // Convert assets array length to C++ size_t
+    jsize assetsLength = env->GetArrayLength(assetsArray);
+    size_t assetsSize = static_cast<size_t>(assetsLength);
+
+    if (assetsSize == 0) {
+        CopyFile(path, base);
+    } else {
+        std::string fullPath = base + "/" + pathStart;
+
+        // Create the directory if it doesn't exist
+        CreateDirectory(fullPath);
+
+        // Iterate over assets and recursively call copyFileOrDir
+        for (size_t i = 0; i < assetsSize; ++i) {
+            jstring asset = (jstring)env->GetObjectArrayElement(assetsArray, i);
+            const char* assetStr = env->GetStringUTFChars(asset, nullptr);
+            std::string assetPath = path + "/" + assetStr;
+            env->ReleaseStringUTFChars(asset, assetStr);
+
+            CopyFileOrDir(assetPath, base, assetPath.substr(assetPath.find(pathStart) + pathStart.length()));
         }
     }
 
