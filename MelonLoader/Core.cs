@@ -61,7 +61,7 @@ namespace MelonLoader
                 Fixes.ProcessFix.Install();
 #if __ANDROID__
                 Fixes.DateTimeOverride.Install();
-                Fixes.NetSocketsFix.Install();
+                Fixes.LemonCrashFixes.Install();
 #endif
 #if !__ANDROID__
                 PatchShield.Install();
