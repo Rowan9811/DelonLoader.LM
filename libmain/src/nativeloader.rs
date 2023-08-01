@@ -4,6 +4,7 @@ use jni::{
     JNIEnv,
 };
 use std::path::PathBuf;
+use std::ffi::CStr;
 
 use crate::utils::{libs::load_lib, self};
 
@@ -23,6 +24,13 @@ fn load_bootstrap(env: &JNIEnv) {
     let bootstrap_lib = load_lib(&PathBuf::from("libBootstrap.so"), libc::RTLD_LAZY)
         .unwrap_or_else(|e| {
             error!("Failed to load libBootstrap.so: {}", e.to_string());
+
+            let dl_error = unsafe { libc::dlerror() };
+            let error_message = unsafe {
+                CStr::from_ptr(dl_error)
+            };
+            let formatted_string = error_message.to_string_lossy();
+            error!("dlerror: {}", formatted_string);
             panic!();
         });
 
