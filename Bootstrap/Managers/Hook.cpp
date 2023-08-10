@@ -86,6 +86,7 @@ void Hook::Detach(void** target, void* detour)
             return;
         }
 
+        *target = stub;
         stub = nullptr;
         free(DobbyHookMap[detour]);
 
