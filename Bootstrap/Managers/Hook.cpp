@@ -41,8 +41,6 @@ std::unordered_map<void*, Hook::HookDef*> Hook::DobbyHookMap;
 
 void Hook::Attach(void** target, void* detour)
 {
-    //Debug::Msg("attaching");
-
     if (DobbyHookMap.find(detour) == DobbyHookMap.end()) {
         Hook::HookDef* handle = nullptr;
         DobbyHookMap[detour] = handle = (Hook::HookDef*)malloc(sizeof(Hook::HookDef));
@@ -50,10 +48,22 @@ void Hook::Attach(void** target, void* detour)
 
         void* org = nullptr;
         int dobby = DobbyHook(*target, (dobby_dummy_func_t)detour, (dobby_dummy_func_t*)&org);
+        if (dobby != 0)
+        {
+            std::string dobbyOutput = "Dobby hook failed: code " + std::to_string(dobby);
+            Logger::QuickLog(dobbyOutput.c_str(), LogType::Error);
+            return;
+        }
+
+        if (org == nullptr)
+        {
+            Logger::QuickLog("Dobby hook failed: null origin", LogType::Error);
+            return;
+        }
+
         *target = org;
 #ifdef DEBUG
-        std::string dobbyOutput = "Hook::Attach = " + std::to_string(dobby);
-        Logger::QuickLog(dobbyOutput.c_str(), LogType::Debug);
+        Logger::QuickLog("Dobby hook successful", LogType::Debug);
 #endif
     }
     else
@@ -62,20 +72,26 @@ void Hook::Attach(void** target, void* detour)
 
 void Hook::Detach(void** target, void* detour)
 {
-    //Logger::QuickLog("Hook detach attempted");
-
     if (DobbyHookMap.find(detour) == DobbyHookMap.end()) {
         Logger::QuickLog("Hook does not exist, can't unhook", LogType::Error);
     }
     else {
         void* stub = DobbyHookMap[detour]->backup;
         int dobby = DobbyDestroy(stub);
-#ifdef DEBUG
-        std::string dobbyOutput = "Hook::Detach = " + std::to_string(dobby);
-        Logger::QuickLog(dobbyOutput.c_str(), LogType::Debug);
-#endif
+
+        if (dobby != 0)
+        {
+            std::string dobbyOutput = "Dobby unhook failed: code " + std::to_string(dobby);
+            Logger::QuickLog(dobbyOutput.c_str(), LogType::Error);
+            return;
+        }
+
         stub = nullptr;
         free(DobbyHookMap[detour]);
+
+#ifdef DEBUG
+        Logger::QuickLog("Dobby unhook successful", LogType::Debug);
+#endif
     }
 }
 
