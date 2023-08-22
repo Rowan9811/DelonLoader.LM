@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 namespace MelonLoader
@@ -52,9 +53,9 @@ namespace MelonLoader
             return returnval;
         }
 
-        [DllImport("kernel32", CharSet = CharSet.Unicode)]
+        [MethodImpl(MethodImplOptions.InternalCall)]
         private static extern IntPtr LoadLibrary(string lpLibFileName);
-        [DllImport("kernel32")]
+        [MethodImpl(MethodImplOptions.InternalCall)]
         private static extern IntPtr GetProcAddress(IntPtr hModule, string lpProcName);
     }
 

@@ -207,6 +207,10 @@ void InternalCalls::MelonUtils::AddInternalCalls()
     Mono::AddInternalCall("MelonLoader.MelonUtils::Internal_GetHashCode", (void*)GetHashCode);
     
     Mono::AddInternalCall("MelonLoader.MelonUtils::GetStaticSettings", (void*)GetStaticSettings);
+
+    // It's basically a util
+    Mono::AddInternalCall("MelonLoader.NativeLibrary::GetProcAddress", (void*)UnhollowerIl2Cpp::GetProcAddress);
+    Mono::AddInternalCall("MelonLoader.NativeLibrary::LoadLibrary", (void*)UnhollowerIl2Cpp::LoadLibrary);
 }
 #pragma endregion
 
