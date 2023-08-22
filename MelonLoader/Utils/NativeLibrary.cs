@@ -54,9 +54,9 @@ namespace MelonLoader
         }
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        private static extern IntPtr LoadLibrary(string lpLibFileName);
+        private static extern IntPtr LoadLibrary([MarshalAs(UnmanagedType.LPStr)] string lpFileName);
         [MethodImpl(MethodImplOptions.InternalCall)]
-        private static extern IntPtr GetProcAddress(IntPtr hModule, string lpProcName);
+        private static extern IntPtr GetProcAddress(IntPtr hModule, [MarshalAs(UnmanagedType.LPStr)] string procName);
     }
 
     public class NativeLibrary<T> : NativeLibrary
