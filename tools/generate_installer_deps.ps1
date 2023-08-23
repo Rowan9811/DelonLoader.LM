@@ -47,7 +47,7 @@ Copy-Item -Path "installer_deps_required\*" -Destination "installer_deps" -Recur
 # Compile MelonLoader
 $baseMlPath = (Get-Item $pwd ).parent.FullName
 Write-Host "BaseDirectory: $baseMlPath`n"
-& $msbuild @("$baseMlPath/MelonLoader.sln", "/t:Build", "/p:Configuration=Release", "/p:Platform=`"Android - ARM64`"")
+& $msbuild @("$baseMlPath/MelonLoader.sln", "/t:Rebuild", "/p:Configuration=Release", "/p:Platform=`"Android - ARM64`"")
 
 Write-Host "`nCopying compiled files..."
 
