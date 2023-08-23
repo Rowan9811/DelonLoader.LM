@@ -40,29 +40,32 @@
 	  <DefineConstants>$(DefineConstants)TRACE;__ANDROID__</DefineConstants>
 	</PropertyGroup>
 	<ItemGroup>
-		<Reference Include="AssemblyUnhollower">
-		  <HintPath>F:\Projects\GitHub\Il2CppAssemblyUnhollower\AssemblyUnhollower\bin\Debug\net4.7.2\AssemblyUnhollower.dll</HintPath>
-		</Reference>
-		<Reference Include="Cpp2IL.Core">
-		  <HintPath>F:\Projects\GitHub\Cpp2IL\Cpp2IL.Core\bin\Debug\net472\Cpp2IL.Core.dll</HintPath>
-		</Reference>
-		<Reference Include="LibCpp2IL">
-		  <HintPath>F:\Projects\GitHub\Cpp2IL\LibCpp2IL\bin\Debug\net472\LibCpp2IL.dll</HintPath>
-		</Reference>
-	</ItemGroup>
-	<ItemGroup>
 	  <ProjectReference Include="..\..\MelonLoader\MelonLoader.csproj">
+	    <Private>false</Private>
+	    <CopyLocalSatelliteAssemblies>false</CopyLocalSatelliteAssemblies>
+	  </ProjectReference>
+	  <ProjectReference Include="..\..\ExternalDeps\Il2CppAssemblyUnhollower\AssemblyUnhollower\AssemblyUnhollower.csproj">
+	    <Private>false</Private>
+	    <CopyLocalSatelliteAssemblies>false</CopyLocalSatelliteAssemblies>
+	  </ProjectReference>
+	  <ProjectReference Include="..\..\ExternalDeps\Il2CppAssemblyUnhollower\UnhollowerBaseLib\UnhollowerBaseLib.csproj">
+	    <Private>false</Private>
+	    <CopyLocalSatelliteAssemblies>false</CopyLocalSatelliteAssemblies>
+	  </ProjectReference>
+	  <ProjectReference Include="..\..\ExternalDeps\Il2CppAssemblyUnhollower\UnhollowerRuntimeLib\UnhollowerRuntimeLib.csproj">
+	    <Private>false</Private>
+	    <CopyLocalSatelliteAssemblies>false</CopyLocalSatelliteAssemblies>
+	  </ProjectReference>
+	  <ProjectReference Include="..\..\ExternalDeps\Cpp2IL\Cpp2IL.Core\Cpp2IL.Core.csproj">
+	    <Private>false</Private>
+	    <CopyLocalSatelliteAssemblies>false</CopyLocalSatelliteAssemblies>
+	  </ProjectReference>
+	  <ProjectReference Include="..\..\ExternalDeps\Cpp2IL\LibCpp2IL\LibCpp2IL.csproj">
 	    <Private>false</Private>
 	    <CopyLocalSatelliteAssemblies>false</CopyLocalSatelliteAssemblies>
 	  </ProjectReference>
 	</ItemGroup>
 	<ItemGroup>
 		<Reference Include="System.IO.Compression" />
-		<Reference Include="UnhollowerBaseLib">
-		  <HintPath>F:\Projects\GitHub\Il2CppAssemblyUnhollower\UnhollowerBaseLib\bin\Debug\net4.7.2\UnhollowerBaseLib.dll</HintPath>
-		</Reference>
-		<Reference Include="UnhollowerRuntimeLib">
-		  <HintPath>F:\Projects\GitHub\Il2CppAssemblyUnhollower\UnhollowerRuntimeLib\bin\Debug\net4.7.2\UnhollowerRuntimeLib.dll</HintPath>
-		</Reference>
 	</ItemGroup>
 </Project>

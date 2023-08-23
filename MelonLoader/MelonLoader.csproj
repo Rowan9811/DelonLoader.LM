@@ -93,8 +93,9 @@
 		<None Include="Resources\classdata.tpk" />
 	</ItemGroup>
 	<ItemGroup>
-	  <Reference Include="JNISharp">
-	    <HintPath>..\..\JNISharp\JNISharp\bin\Debug\net35\JNISharp.dll</HintPath>
-	  </Reference>
+	  <ProjectReference Include="..\ExternalDeps\JNISharp\JNISharp\JNISharp.csproj">
+	    <Private>true</Private>
+	    <CopyLocalSatelliteAssemblies>false</CopyLocalSatelliteAssemblies>
+	  </ProjectReference>
 	</ItemGroup>
 </Project>
