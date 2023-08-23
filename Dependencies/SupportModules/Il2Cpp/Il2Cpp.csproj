@@ -63,14 +63,6 @@
 		<Reference Include="MonoMod.Utils">
 		  <HintPath>..\..\..\Output\Release\Android\MelonLoader\MonoMod.Utils.dll</HintPath>
 		</Reference>
-		<Reference Include="UnhollowerBaseLib">
-			<HintPath>F:\Projects\GitHub\Il2CppAssemblyUnhollower\UnhollowerBaseLib\bin\Debug\net4.7.2\UnhollowerBaseLib.dll</HintPath>
-			<Private>false</Private>
-		</Reference>
-		<Reference Include="UnhollowerRuntimeLib">
-			<HintPath>F:\Projects\GitHub\Il2CppAssemblyUnhollower\UnhollowerRuntimeLib\bin\Debug\net4.7.2\UnhollowerRuntimeLib.dll</HintPath>
-			<Private>false</Private>
-		</Reference>
 		<Reference Include="UnityEngine.CoreModule">
 			<HintPath>Libs\UnityEngine.CoreModule.dll</HintPath>
 			<Private>false</Private>
@@ -88,6 +80,14 @@
 	</ItemGroup>
 	<ItemGroup>
 	  <ProjectReference Include="..\..\..\MelonLoader\MelonLoader.csproj">
+	    <Private>false</Private>
+	    <CopyLocalSatelliteAssemblies>false</CopyLocalSatelliteAssemblies>
+	  </ProjectReference>
+	  <ProjectReference Include="..\..\..\ExternalDeps\Il2CppAssemblyUnhollower\UnhollowerBaseLib\UnhollowerBaseLib.csproj">
+	    <Private>false</Private>
+	    <CopyLocalSatelliteAssemblies>false</CopyLocalSatelliteAssemblies>
+	  </ProjectReference>
+	  <ProjectReference Include="..\..\..\ExternalDeps\Il2CppAssemblyUnhollower\UnhollowerRuntimeLib\UnhollowerRuntimeLib.csproj">
 	    <Private>false</Private>
 	    <CopyLocalSatelliteAssemblies>false</CopyLocalSatelliteAssemblies>
 	  </ProjectReference>
