@@ -43,7 +43,8 @@ public:
 		static void SCT(Mono::String* title);
 		static Mono::String* GetFileProductName(Mono::String* filepath);
 		static void GetStaticSettings(StaticSettings::Settings_t &settings);
-	};
+        static Mono::String* dlerror_mono();
+    };
 
 	class MelonDebug
 	{

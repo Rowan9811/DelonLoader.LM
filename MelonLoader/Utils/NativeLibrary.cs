@@ -27,7 +27,7 @@ namespace MelonLoader
                 throw new ArgumentNullException(nameof(filepath));
             IntPtr ptr = LoadLibrary(filepath);
             if (ptr == IntPtr.Zero)
-                throw new Exception($"Unable to Load Native Library {filepath}!");
+                throw new Exception($"Unable to Load Native Library {filepath}!\ndlerror: {dlerror()}");
             return ptr;
         }
 
@@ -57,6 +57,10 @@ namespace MelonLoader
         private static extern IntPtr LoadLibrary([MarshalAs(UnmanagedType.LPStr)] string lpFileName);
         [MethodImpl(MethodImplOptions.InternalCall)]
         private static extern IntPtr GetProcAddress(IntPtr hModule, [MarshalAs(UnmanagedType.LPStr)] string procName);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        [return: MarshalAs(UnmanagedType.LPStr)]
+        private extern static string dlerror();
     }
 
     public class NativeLibrary<T> : NativeLibrary

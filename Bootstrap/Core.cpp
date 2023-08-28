@@ -29,6 +29,7 @@
 #include "./Utils/AssemblyUnhollower/XrefScannerBindings.h"
 #include "Managers/BHapticsBridge.h"
 #include "Utils/AssetHelper.h"
+#include "Utils/AssemblyLoader.h"
 
 #endif
 
@@ -86,7 +87,11 @@ bool Core::Inject()
                     AndroidData::Initialize
             },
             {
-                    "Loading Asset Manager",
+                    "Initializing Assembly Loader",
+                    AssemblyLoader::Initialize
+            },
+            {
+                    "Initializing Asset Manager",
                     AssetManagerHelper::Initialize
             },
             {

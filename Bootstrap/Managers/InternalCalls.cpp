@@ -19,6 +19,7 @@
 #include "BaseAssembly.h"
 #include "../Utils/Encoding.h"
 #include "../Utils/JNIManagedInterface.h"
+#include "../Utils/AssemblyLoader.h"
 
 bool InternalCalls::Initialized = false;
 
@@ -183,6 +184,12 @@ void InternalCalls::MelonUtils::GetStaticSettings(StaticSettings::Settings_t &se
     memcpy(&settings, &StaticSettings::Settings, sizeof(StaticSettings::Settings_t));
 }
 
+Mono::String* InternalCalls::MelonUtils::dlerror_mono()
+{
+    char* err = dlerror();
+    return Mono::Exports::mono_string_new(Mono::domain, err);
+}
+
 void InternalCalls::MelonUtils::AddInternalCalls()
 {
     Mono::AddInternalCall("MelonLoader.MelonUtils::IsGame32Bit", (void*)IsGame32Bit);
@@ -211,6 +218,7 @@ void InternalCalls::MelonUtils::AddInternalCalls()
     // It's basically a util
     Mono::AddInternalCall("MelonLoader.NativeLibrary::GetProcAddress", (void*)UnhollowerIl2Cpp::GetProcAddress);
     Mono::AddInternalCall("MelonLoader.NativeLibrary::LoadLibrary", (void*)UnhollowerIl2Cpp::LoadLibrary);
+    Mono::AddInternalCall("MelonLoader.NativeLibrary::dlerror", (void*)dlerror_mono);
 }
 #pragma endregion
 
@@ -270,13 +278,13 @@ void* InternalCalls::UnhollowerIl2Cpp::GetProcAddress(void* hModule, Mono::Strin
 void* InternalCalls::UnhollowerIl2Cpp::LoadLibrary(Mono::String* lpFileName)
 {
     char* parsedLib = Mono::Exports::mono_string_to_utf8(lpFileName);
-    //Debug::Msg(parsedLib);
+
     if (strcmp(parsedLib, "GameAssembly.dll") == 0
        || strcmp(parsedLib, "libil2cpp.so") == 0
        || strcmp(parsedLib, "il2cpp") == 0)
         return Il2Cpp::Handle;
 
-    return dlopen(parsedLib, RTLD_NOW | RTLD_GLOBAL);
+    return AssemblyLoader::Open(parsedLib);
 }
 
 void* InternalCalls::UnhollowerIl2Cpp::GetAsmLoc()

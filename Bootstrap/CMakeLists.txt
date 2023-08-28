@@ -40,7 +40,7 @@ elseif(NOT DEFINED PLATFORM)
     message(FATAL_ERROR "PLATFORM is unset")
 endif()
 
-add_library(${PROJECT_NAME} SHARED ${SRC_FILES} ${HEADER_FILES} Utils/Console/Log.cpp Utils/Console/Log.h Utils/JNIManagedInterface.cpp Utils/JNIManagedInterface.h Utils/AssetHelper.cpp Utils/AssetHelper.h)
+add_library(${PROJECT_NAME} SHARED ${SRC_FILES} ${HEADER_FILES} Utils/Console/Log.cpp Utils/Console/Log.h Utils/JNIManagedInterface.cpp Utils/JNIManagedInterface.h Utils/AssetHelper.cpp Utils/AssetHelper.h Utils/AssemblyLoader.cpp Utils/AssemblyLoader.h)
 
 if(DEFINED USE_CAPSTONE)
     set(CAPSTONE_BUILD_STATIC OFF)
