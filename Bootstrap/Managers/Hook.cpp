@@ -121,7 +121,7 @@ void Hook::AttachFH(void** target, void* detour)
     rv = funchook_install(handle->handle, 0);
     if (rv != 0)
     {
-        Logger::QuickLogf("Failed to install hook (%d, %s)", LogType::Error, rv, funchook_error_message(handle->handle));
+        Logger::QuickLogf(LogType::Error, "Failed to install hook (%d, %s)", rv, funchook_error_message(handle->handle));
         return;
     }
 

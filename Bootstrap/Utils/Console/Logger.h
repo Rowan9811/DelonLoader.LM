@@ -34,7 +34,7 @@ public:
     // Creates a log, and prints it to the console and file, all in one function.
     static void QuickLog(const char* txt, LogType logType = Msg)
     {LogToConsoleAndFile(Log(logType, nullptr, txt));}
-    static void QuickLogf(const char* fmt, LogType logType, ...)
+    static void QuickLogf(LogType logType, const char* fmt, ...)
     {
         va_list args;
         va_start(args, fmt);

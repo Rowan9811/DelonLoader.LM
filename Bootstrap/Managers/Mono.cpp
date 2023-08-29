@@ -499,7 +499,7 @@ bool Mono::CheckPaths()
 	{
 		if (!Core::DirectoryExists(path))
 		{
-			Logger::QuickLogf("Failed to load path (%s) because it doesn't exist.  Please restart the game after it loads.", LogType::Error, path);
+			Logger::QuickLogf(LogType::Error, "Failed to load path (%s) because it doesn't exist.  Please restart the game after it loads.", path);
 			return false;
 		}
 	}
