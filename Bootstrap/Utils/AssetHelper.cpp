@@ -7,6 +7,9 @@
 #include "../Managers/AssetManagerHelper.h"
 #include "../Core.h"
 #include "../Managers/AndroidData.h"
+#include "./Console/Debug.h"
+
+const std::string copyDataStr = "copyToData";
 
 bool AssetHelper::CopyMelon() {
     try {
@@ -14,6 +17,8 @@ bool AssetHelper::CopyMelon() {
         // The + "/" is required for this to function. It breaks everything otherwise. Do not ask why, I do not know.
         CopyFileOrDir("melonloader", base + "/");
         CopyFileOrDir("bin/Data/Managed/etc", base + "/il2cpp/", "etc");
+
+        CopyFileOrDir(copyDataStr, base + "/");
         return true;
     }
     catch (...) {
@@ -119,7 +124,19 @@ void AssetHelper::CopyFileOrDir(const std::string& path, const std::string& base
 
 void AssetHelper::CopyFile(const std::string& filename, const std::string& base) {
     AAsset* asset = AAssetManager_open(AssetManagerHelper::Instance, filename.c_str(), AASSET_MODE_UNKNOWN);
-    std::ofstream outputStream = std::ofstream(base + "/" + filename);
+    // This is for copyToData. I would do this earlier, but it didn't work.
+    if (asset == nullptr) {
+        return;
+    }
+
+    // Not great, but it works.
+    std::string outFilename(filename);
+    size_t pos = outFilename.find(copyDataStr);
+    if (pos != std::string::npos) {
+        outFilename.erase(pos, copyDataStr.length());
+    }
+
+    std::ofstream outputStream = std::ofstream(base + "/" + outFilename);
 
     const int bufferSize = 1024;
     void* buffer = malloc(bufferSize);
@@ -136,8 +153,15 @@ void AssetHelper::CopyFile(const std::string& filename, const std::string& base)
 }
 
 bool AssetHelper::CreateDirectory(const std::string& path) {
-    if (!std::filesystem::exists(path)) {
-        if (!std::filesystem::create_directory(path))
+    // Not great, but it works.
+    std::string newPath(path);
+    size_t pos = newPath.find(copyDataStr);
+    if (pos != std::string::npos) {
+        newPath.erase(pos, copyDataStr.length());
+    }
+
+    if (!std::filesystem::exists(newPath)) {
+        if (!std::filesystem::create_directory(newPath))
             return false;
     }
 
