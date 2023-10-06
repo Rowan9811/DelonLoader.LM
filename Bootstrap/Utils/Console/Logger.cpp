@@ -35,12 +35,12 @@ Logger::FileStream Logger::LogFile;
 
 bool Logger::Initialize()
 {
-	if (Debug::Enabled)
+	/*if (Debug::Enabled)
 	{
 		MaxLogs = 0;
 		MaxWarnings = 0;
 		MaxErrors = 0;
-	}
+	}*/
 
 #ifdef __ANDROID__
     std::string timeStamp = GetTimestamp("%y-%m-%d_%OH-%OM-%OS");
