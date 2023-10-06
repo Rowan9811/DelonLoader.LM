@@ -15,7 +15,6 @@
 
 #ifdef __ANDROID__
 #include <dlfcn.h>
-#include <stdio.h>
 #include <sys/stat.h>
 #endif
 
@@ -260,28 +259,28 @@ bool Mono::SetupPaths()
 #elif defined(__ANDROID__)
 	if (Game::IsIl2Cpp)
 	{
-		std::string BasePathStr = (std::string(Game::BasePath) + "/melonloader/etc").c_str();
+		std::string BasePathStr = DirectoryConcat(Game::BasePath, "melonloader/etc");
 		BasePath = new char[BasePathStr.size() + 1];
 		std::copy(BasePathStr.begin(), BasePathStr.end(), BasePath);
 		BasePath[BasePathStr.size()] = '\0';
 
-		std::string ManagedPathStr = (std::string(Mono::BasePath) + "/managed").c_str();
+		std::string ManagedPathStr = DirectoryConcat(Mono::BasePath, "managed");
 		ManagedPath = new char[ManagedPathStr.size() + 1];
 		std::copy(ManagedPathStr.begin(), ManagedPathStr.end(), ManagedPath);
 		ManagedPath[ManagedPathStr.size()] = '\0';
 		
-		std::string ConfigPathStr = (std::string(Game::DataPath) + "/il2cpp/etc").c_str();
+		std::string ConfigPathStr = DirectoryConcat(Game::DataPath, "il2cpp/etc");
 		ConfigPath = new char[ConfigPathStr.size() + 1];
 		std::copy(ConfigPathStr.begin(), ConfigPathStr.end(), ConfigPath);
 		ConfigPath[ConfigPathStr.size()] = '\0';
 
 		// TODO: REMOVE
-		std::string BaseAsmPathStr = (BasePathStr + "/MelonLoader.dll").c_str();
+		std::string BaseAsmPathStr = DirectoryConcat(BasePathStr, "MelonLoader.dll");
 		BaseAssembly::PathMono = new char[BaseAsmPathStr.size() + 1];
 		std::copy(BaseAsmPathStr.begin(), BaseAsmPathStr.end(), BaseAssembly::PathMono);
 		BaseAssembly::PathMono[BaseAsmPathStr.size()] = '\0';
 
-		std::string PreloadPathStr = (BasePathStr + "/support/Preload.dll").c_str();
+		std::string PreloadPathStr = DirectoryConcat(BasePathStr, "support/Preload.dll");
 		BaseAssembly::PreloadPath = new char[PreloadPathStr.size() + 1];
 		std::copy(PreloadPathStr.begin(), PreloadPathStr.end(), BaseAssembly::PreloadPath);
 		BaseAssembly::PreloadPath[PreloadPathStr.size()] = '\0';
@@ -294,6 +293,15 @@ bool Mono::SetupPaths()
 #endif
 	
 	return true;
+}
+
+std::string Mono::DirectoryConcat(std::string base, const char* path)
+{
+    if (base[base.size() - 1] != '/') // Missing a path character between the two?
+        base += "/";
+
+    base += path; // Then append the actual path
+    return base;
 }
 
 void Mono::CreateDomain(const char* name)

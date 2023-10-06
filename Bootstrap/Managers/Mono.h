@@ -5,6 +5,7 @@
 #include <string.h>
 #include <jni.h>
 #endif
+#include <string>
 
 class Mono
 {
@@ -257,6 +258,7 @@ private:
 	static const char* FolderNames[];
 	static void* PosixHelper;
 	static const char* PosixHelperName;
+    static std::string DirectoryConcat(std::string base, const char* path);
 #ifdef __ANDROID__
 	static jclass jMonoDroidHelper;
 	static jmethodID jLoadApplication;
