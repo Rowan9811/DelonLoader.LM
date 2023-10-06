@@ -7,18 +7,17 @@
 #include "../Managers/AssetManagerHelper.h"
 #include "../Core.h"
 #include "../Managers/AndroidData.h"
-#include "./Console/Debug.h"
+#include "./Console/Logger.h"
 
 const std::string copyDataStr = "copyToData";
 
 bool AssetHelper::CopyMelon() {
     try {
-        std::string base = std::string(AndroidData::DataDir);
+        std::string base = (std::string(AndroidData::DataDir) + "/").c_str();
         // The + "/" is required for this to function. It breaks everything otherwise. Do not ask why, I do not know.
-        CopyFileOrDir("melonloader", base + "/");
-        CopyFileOrDir("bin/Data/Managed/etc", base + "/il2cpp/", "etc");
-
-        CopyFileOrDir(copyDataStr, base + "/");
+        CopyFileOrDir("melonloader", base);
+        CopyFileOrDir(copyDataStr, base);
+        CopyFileOrDir("bin/Data/Managed/etc", base + "il2cpp/", "etc");
         return true;
     }
     catch (...) {

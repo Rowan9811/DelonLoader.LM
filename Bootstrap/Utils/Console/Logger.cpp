@@ -73,9 +73,8 @@ bool Logger::Initialize()
 }
 
 std::string Logger::CleanAndGetFile() {
-    std::string basePath = AndroidData::DataDir;
-    std::string mlPath("/melonloader/etc/logs");
-    std::string logFolderPath = basePath + mlPath;
+    std::string logFolderPath = Encoding::DirectoryConcat(AndroidData::DataDir, "melonloader/etc/logs");
+
 
     if (!std::filesystem::exists(logFolderPath)) {
         if (!std::filesystem::create_directory(logFolderPath))

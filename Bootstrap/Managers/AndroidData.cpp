@@ -112,8 +112,7 @@ void AndroidData::GetDataDir()
     env->DeleteLocalRef(extFileObj);
     env->DeleteLocalRef(fileString);
 
-    std::vector<char> dataVector(str.c_str(), str.c_str() + str.size() + 1);
-    DataDir = (char *)(&dataVector[0]);
+    DataDir = strdup(str.c_str());
 }
 
 std::string AndroidData::jstring2string(JNIEnv *env, jstring jStr) {
