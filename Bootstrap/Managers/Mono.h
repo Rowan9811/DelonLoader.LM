@@ -24,10 +24,7 @@ public:
 	static Domain* domain;
 	static bool IsOldMono;
 	static char* ManagedPath;
-	static char* ManagedPathMono;
 	static char* ConfigPath;
-	static char* ConfigPathMono;
-	static char* MonoConfigPathMono;
 	static bool Initialize();
 	static bool Load();
 	static bool SetupPaths();

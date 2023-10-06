@@ -31,10 +31,7 @@ const char* Mono::FolderNames[] = { "Mono", "MonoBleedingEdge", "MonoBleedingEdg
 const char* Mono::PosixHelperName = "MonoPosixHelper";
 char* Mono::BasePath = NULL;
 char* Mono::ManagedPath = NULL;
-char* Mono::ManagedPathMono = NULL;
 char* Mono::ConfigPath = NULL;
-char* Mono::ConfigPathMono = NULL;
-char* Mono::MonoConfigPathMono = NULL;
 Mono::Domain* Mono::domain = NULL;
 bool Mono::IsOldMono = false;
 
