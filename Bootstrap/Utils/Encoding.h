@@ -23,5 +23,10 @@ public:
     /// This isn't really encoding but close enough so it's here
     /// </summary>
     static std::string string_format(const char* format, va_list args1);
+
+    /// <summary>
+    /// Concatenates paths while handling /
+    /// </summary>
+    static std::string DirectoryConcat(std::string base, const char* path);
 };
 

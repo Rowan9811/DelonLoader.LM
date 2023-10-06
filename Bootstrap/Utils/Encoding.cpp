@@ -71,3 +71,12 @@ std::string Encoding::string_format(const char* format, va_list args1)
 
     return str;
 }
+
+std::string Encoding::DirectoryConcat(std::string base, const char* path)
+{
+    if (base[base.size() - 1] != '/') // Missing a path character between the two?
+        base += "/";
+
+    base += path; // Then append the actual path
+    return base;
+}
