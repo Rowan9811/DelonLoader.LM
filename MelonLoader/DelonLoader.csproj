@@ -122,7 +122,7 @@
 	</ItemGroup>
 	<ItemGroup>
 	  <None Update="Resources\i am a very frieendly fellow.mov">
-	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	    <CopyToOutputDirectory>Never</CopyToOutputDirectory>
 	  </None>
 	</ItemGroup>
 </Project>

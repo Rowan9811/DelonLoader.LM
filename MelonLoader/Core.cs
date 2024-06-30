@@ -92,7 +92,7 @@ namespace MelonLoader
                             case "KSHRAnti":
                                 {
                                     if (type.GetField("useWebhook") == null)
-                                        DllCheckerPatch.Install();
+                                        KSHRAntiPatch.Install();
                                     break;
                                 }
                             case "SignatureCheck":
