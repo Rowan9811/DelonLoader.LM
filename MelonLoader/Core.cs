@@ -5,6 +5,8 @@ using MelonLoader.MonoInternals;
 using bHapticsLib;
 using System.IO;
 using System.Security.Permissions;
+using System.Reflection;
+using DelonLoader.anti_cheat_patchs;
 #pragma warning disable IDE0051 // Prevent the IDE from complaining about private unreferenced methods
 
 namespace MelonLoader
@@ -67,6 +69,37 @@ namespace MelonLoader
 #if !__ANDROID__
                 PatchShield.Install();
 #endif
+                //applies patches for anti-cheats in an inefficient way
+                foreach (Assembly a in AppDomain.CurrentDomain.GetAssemblies())
+                {
+                    foreach (Type type in a.GetTypes())
+                    {
+                        
+                        switch (type.Name)
+                        {
+                            case "QuestLink":
+                                {
+                                    QuestLinkPatch.Install();
+                                    break;
+                                }
+                            case "DllChecker":
+                                {
+                                    DllCheckerPatch.Install();
+                                    break; 
+                                }
+                            case "KSHRAnti":
+                                {
+                                    DllCheckerPatch.Install();
+                                    break;
+                                }
+                        }
+
+                        //if (type.Name == "QuestLink")
+                        //{
+                        //    QuestLinkPatch.Install();
+                        //}
+                    }
+                }
             }
 
             MelonPreferences.Load();
