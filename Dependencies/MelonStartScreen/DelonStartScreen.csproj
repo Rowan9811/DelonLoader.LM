@@ -40,7 +40,7 @@
 		<None Include="Resources\Logo_Melon.dat" />
 	</ItemGroup>
 	<ItemGroup>
-	  <ProjectReference Include="..\..\MelonLoader\MelonLoader.csproj">
+	  <ProjectReference Include="..\..\MelonLoader\DelonLoader.csproj">
 	    <Private>false</Private>
 	    <CopyLocalSatelliteAssemblies>false</CopyLocalSatelliteAssemblies>
 	  </ProjectReference>

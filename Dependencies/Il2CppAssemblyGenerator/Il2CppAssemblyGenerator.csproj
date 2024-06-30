@@ -40,7 +40,7 @@
 	  <DefineConstants>$(DefineConstants)TRACE;__ANDROID__</DefineConstants>
 	</PropertyGroup>
 	<ItemGroup>
-	  <ProjectReference Include="..\..\MelonLoader\MelonLoader.csproj">
+	  <ProjectReference Include="..\..\MelonLoader\DelonLoader.csproj">
 	    <Private>false</Private>
 	    <CopyLocalSatelliteAssemblies>false</CopyLocalSatelliteAssemblies>
 	  </ProjectReference>

@@ -20,10 +20,10 @@ namespace MelonLoader
 
         internal static void Setup()
         {
-            PluginsDirectory = Path.Combine(MelonUtils.BaseDirectory, "Plugins");
+            PluginsDirectory = Path.Combine(MelonUtils.BaseDirectory, "Glugins");
             if (!Directory.Exists(PluginsDirectory))
                 Directory.CreateDirectory(PluginsDirectory);
-            ModsDirectory = Path.Combine(MelonUtils.BaseDirectory, "Mods");
+            ModsDirectory = Path.Combine(MelonUtils.BaseDirectory, "Pods");
             if (!Directory.Exists(ModsDirectory))
                 Directory.CreateDirectory(ModsDirectory);
         }

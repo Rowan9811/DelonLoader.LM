@@ -4,10 +4,12 @@ using MelonLoader.InternalUtils;
 using MelonLoader.MonoInternals;
 using bHapticsLib;
 using System.IO;
+using System.Security.Permissions;
 #pragma warning disable IDE0051 // Prevent the IDE from complaining about private unreferenced methods
 
 namespace MelonLoader
 {
+    [ReflectionPermission(SecurityAction.Deny)]
 	internal static class Core
     {
         internal static HarmonyLib.Harmony HarmonyInstance;
@@ -43,7 +45,6 @@ namespace MelonLoader
                 }
             }
 #endif
-
             bool bypassHarmony = false;
             if (File.Exists(Path.Combine(MelonUtils.BaseDirectory, "isEmulator.txt")))
             {
