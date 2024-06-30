@@ -3,8 +3,16 @@
   <a href="#"><img src="https://i.imgur.com/JW61R2C.png"></a>
 </p>
 
-[Lemon Loader Trello Board](https://trello.com/b/tzQ4yjU1/lemonloader)
+## How To Use
+1. you install lemon installer through the lemon installer
+2. download DelonLoader from [releases](https://github.com/Rowan9811/DelonLoader.LM./releases)
+3. extract it and drag and drop in the folder above where the mods go (./com.companyname.gamename/)
+4. if there's plugins and mods delete them
+5. mods will be put in Pods and Glugins is the plugins folder
+6. profit
+---
 
+[Lemon Loader Trello Board](https://trello.com/b/tzQ4yjU1/lemonloader)
 ## Lemon Loader Credits
 - [SirCoolness](https://github.com/SirCoolness)
   - Made the original version of Lemon which gave me a major starting place.
