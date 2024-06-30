@@ -7,8 +7,8 @@
 1. you install lemon installer through the lemon installer
 2. download DelonLoader from [releases](https://github.com/Rowan9811/DelonLoader.LM./releases)
 3. extract it and drag and drop in the etc folder in melonloader (/../com.companyname.gamename/files/melonloader/etc)
-4. if there's plugins and mods delete them
-5. mods will be put in Pods and Glugins is the plugins folder
+4. if there's plugins and mods delete them 
+5. mods will be put in Pods and Glugins is the plugins folder (the reason why they're called that cuz some anti cheats are kind of stupid so the check for plugins and mods)
 6. profit
 ---
 
