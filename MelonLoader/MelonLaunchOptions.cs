@@ -90,12 +90,14 @@ namespace MelonLoader
             public static LoadModeEnum LoadMode_Plugins { get; internal set; }
             public static LoadModeEnum LoadMode_Mods { get; internal set; }
             public static bool QuitFix { get; internal set; }
+            public static bool DoModifiedLog { get; internal set; } = true;
             public static bool StartScreen { get; internal set; } = true;
             public static string UnityVersion { get; internal set; }
 
             internal static void Setup()
             {
                 WithoutArg["quitfix"] = () => QuitFix = true;
+                WithoutArg["melonloader.disablewarninglog"] = () => DoModifiedLog = false;
                 WithoutArg["melonloader.disablestartscreen"] = () => StartScreen = false;
                 WithArg["melonloader.loadmodeplugins"] = (string arg) =>
                 {

@@ -85,7 +85,6 @@
 	<ItemGroup>
 		<PackageReference Include="AssetRipper.VersionUtilities" Version="1.2.1" />
 		<PackageReference Include="AssetsTools.NET" Version="3.0.0-preview1" />
-		<PackageReference Include="HarmonyX" Version="2.10.1" />
 		<PackageReference Include="Samboy063.Tomlet" Version="5.0.1" />
 		<PackageReference Include="bHapticsLib" Version="1.0.6" />
 	</ItemGroup>
@@ -97,5 +96,28 @@
 	    <Private>true</Private>
 	    <CopyLocalSatelliteAssemblies>false</CopyLocalSatelliteAssemblies>
 	  </ProjectReference>
+	</ItemGroup>
+	<ItemGroup>
+	  <Reference Include="0Karmony">
+	    <HintPath>..\ModedLibs\0Karmony.dll</HintPath>
+	  </Reference>
+	  <Reference Include="Mono.Cecil">
+	    <HintPath>..\ModedLibs\Mono.Cecil.dll</HintPath>
+	  </Reference>
+	  <Reference Include="Mono.Cecil.Mdb">
+	    <HintPath>..\ModedLibs\Mono.Cecil.Mdb.dll</HintPath>
+	  </Reference>
+	  <Reference Include="Mono.Cecil.Pdb">
+	    <HintPath>..\ModedLibs\Mono.Cecil.Pdb.dll</HintPath>
+	  </Reference>
+	  <Reference Include="Mono.Cecil.Rocks">
+	    <HintPath>..\ModedLibs\Mono.Cecil.Rocks.dll</HintPath>
+	  </Reference>
+	  <Reference Include="MonoMod.RuntimeDetour">
+	    <HintPath>..\ModedLibs\MonoMod.RuntimeDetour.dll</HintPath>
+	  </Reference>
+	  <Reference Include="MonoMod.Utils">
+	    <HintPath>..\ModedLibs\MonoMod.Utils.dll</HintPath>
+	  </Reference>
 	</ItemGroup>
 </Project>

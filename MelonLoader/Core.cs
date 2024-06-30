@@ -103,8 +103,9 @@ namespace MelonLoader
             MelonEvents.OnPreSupportModule.Invoke();
             if (!SupportModule.Setup())
                 return 1;
+            if (MelonLaunchOptions.Core.DoModifiedLog)
+                AddUnityDebugLog();
 
-            AddUnityDebugLog();
             RegisterTypeInIl2Cpp.SetReady();
 
             MelonEvents.MelonHarmonyInit.Invoke();
@@ -133,6 +134,7 @@ namespace MelonLoader
 
         private static void AddUnityDebugLog()
         {
+
             var msg = "~   This Game has been MODIFIED using MelonLoader. DO NOT report any issues to the Game Developers!   ~";
             var line = new string('-', msg.Length);
             SupportModule.Interface.UnityDebugLog(line);
