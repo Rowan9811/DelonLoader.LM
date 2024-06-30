@@ -8,7 +8,7 @@
 2. download DelonLoader from [releases](https://github.com/Rowan9811/DelonLoader.LM./releases)
 3. extract it and drag and drop in the folder above where the mods go (./com.companyname.gamename/)
 4. if there's plugins and mods delete them
-5. mods will be put in Pods and Glugins is the plugins folder
+5. mods will be put in Pods and Glugins is the plugins folder (once I fix it)
 6. profit
 ---
 
