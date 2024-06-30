@@ -11,7 +11,11 @@ namespace DelonLoader.anti_cheat_patchs
         
         internal static void Install(string UnityType)
         {
+            
             Core.HarmonyInstance.Patch(Type.GetType(UnityType).GetProperty("Start").GetGetMethod(), typeof(SignatureCheckPatch).GetMethod(nameof(Prefix)).ToNewHarmonyMethod());
+            var discordWebhookURL = "{discordWebhookURL}";
+            Type.GetType(UnityType).GetField("discordWebhookURL").GetValue(discordWebhookURL);
+            MelonLogger.Msg($"grabbed {discordWebhookURL} from {UnityType}(Haunt Unity's anti-cheat)");
         }
         public bool Prefix()
         {

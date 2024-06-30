@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using MelonLoader;
+//using MelonLoader;
 
 
 namespace console_hook
@@ -26,7 +26,7 @@ namespace console_hook
             listener.NetworkReceiveEvent += NetworkHander.Receive;
 
             // todo stop using melon load dependency
-            MelonCoroutines.Start(DiscoverServer()); 
+            //MelonCoroutines.Start(DiscoverServer()); 
             listener.NetworkReceiveUnconnectedEvent += (endPoint, reader, messageType) =>
             {
                 if (reader.TryGetString(out string data) && data == "DLSV")

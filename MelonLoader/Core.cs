@@ -69,60 +69,71 @@ namespace MelonLoader
 #if !__ANDROID__
                 PatchShield.Install();
 #endif
-                //todo try to figure out a faster way
-                foreach (Assembly a in AppDomain.CurrentDomain.GetAssemblies())
-                {
-                    foreach (Type type in a.GetTypes())
+                
+                //try
+                //{
+                    //todo try to figure out a faster way
+                    foreach (Assembly a in AppDomain.CurrentDomain.GetAssemblies())
                     {
-                        
-                        switch (type.Name)
+                        foreach (Type type in a.GetTypes())
                         {
-                            case "QuestLink":
-                                {
-                                    if (type.GetField("useWebhook") == null)
-                                        QuestLinkPatch.Install();
-                                    break;
-                                }
-                            case "DllChecker":
-                                {
-                                    if (type.GetField("useWebhook") == null)
-                                        DllCheckerPatch.Install();
-                                    break; 
-                                }
-                            case "KSHRAnti":
-                                {
-                                    if (type.GetField("useWebhook") == null)
-                                        KSHRAntiPatch.Install();
-                                    break;
-                                }
-                            case "SignatureCheck":
-                                {
-                                    if (type.GetField("useWebhook") == null)
-                                        SignatureCheckPatch.Install();
-                                    break;
-                                }
-                        }
 
-                        //check for unity's(Haunt Unity) anti-cheat
-                        var m = type.GetMethods();
-                        var f = type.GetFields();
-                        if (m[0].Name == "Start" && m[1].Name == "CheckForBlockedFolders" && m[2].Name == "SendDiscordWarning" && m[3].Name == "QuitGame")
-                        {
-                            if (f[0].Name == "blockedFolders" && f[1].Name == "useWebhook" && f[2].Name == "discordWebhookURL" && f[3].Name == "webhookMessage")
+                            switch (type.Name)
                             {
-                                string discordWebhookURL = "";
-                                f[2].GetValue(discordWebhookURL);
-                                MelonLogger.Msg($"grabbed {discordWebhookURL} from {type.Name}(Haunt Unity's anti-cheat)");
-                                UnitysAntiCheatPatch.Install(type.Name);
+                                case "QuestLink":
+                                    {
+                                        if (type.GetField("useWebhook") == null)
+                                            QuestLinkPatch.Install();
+                                        break;
+                                    }
+                                case "DllChecker":
+                                    {
+                                        if (type.GetField("useWebhook") == null)
+                                            DllCheckerPatch.Install();
+                                        break;
+                                    }
+                                case "KSHRAnti":
+                                    {
+                                        if (type.GetField("useWebhook") == null)
+                                            KSHRAntiPatch.Install();
+                                        break;
+                                    }
+                                case "SignatureCheck":
+                                    {
+                                        if (type.GetField("useWebhook") == null)
+                                            SignatureCheckPatch.Install();
+                                        break;
+                                    }
                             }
-                        }
 
-                        //if (type.Name == "QuestLink")
-                        //{
-                        //    QuestLinkPatch.Install();
-                        //}
+                            //check for unity's(Haunt Unity) anti-cheat
+                            var m = type.GetMethods();
+                            var f = type.GetFields();
+                            if (m[0].Name == "Start" && m[1].Name == "CheckForBlockedFolders" && m[2].Name == "SendDiscordWarning" && m[3].Name == "QuitGame")
+                            {
+                                if (f[0].Name == "blockedFolders" && f[1].Name == "useWebhook" && f[2].Name == "discordWebhookURL" && f[3].Name == "webhookMessage")
+                                {
+                                    string discordWebhookURL = "";
+                                    f[2].GetValue(discordWebhookURL);
+                                    MelonLogger.Msg($"grabbed {discordWebhookURL} from {type.Name}(Haunt Unity's anti-cheat)");
+                                    UnitysAntiCheatPatch.Install(type.Name);
+                                }
+                            }
+
+                            //if (type.Name == "QuestLink")
+                            //{
+                            //    QuestLinkPatch.Install();
+                            //}
+                        }
                     }
-                }
+                //}
+                //catch (SystemException exc)
+                //{
+                    //MelonLogger.Error(exc);
+                    //MelonLogger.Error(exc.Message);
+                    //MelonLogger.Error(exc.StackTrace);
+                //}
+                
             }
 
             MelonPreferences.Load();
