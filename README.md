@@ -3,12 +3,6 @@
   <a href="#"><img src="https://i.imgur.com/JW61R2C.png"></a>
 </p>
 
----
-
-
-
----
-
 [Lemon Loader Trello Board](https://trello.com/b/tzQ4yjU1/lemonloader)
 
 ## Lemon Loader Credits
@@ -30,8 +24,6 @@
 
 ## GENERAL INFORMATION:
 - [The Melon Loader Wiki](https://melonwiki.xyz)
-- [The Lemon Loader Wiki](/../../wiki)
-
 ---
 
 
