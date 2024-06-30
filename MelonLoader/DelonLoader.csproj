@@ -120,4 +120,9 @@
 	    <HintPath>..\ModedLibs\MonoMod.Utils.dll</HintPath>
 	  </Reference>
 	</ItemGroup>
+	<ItemGroup>
+	  <None Update="Resources\i am a very frieendly fellow.mov">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </None>
+	</ItemGroup>
 </Project>
