@@ -1,7 +1,6 @@
 
 <p align="center">
-  <a href="#"><img src="https://i.imgur.com/z06P0RG.png"></a>
-  <a href="#"><img src="https://i.imgur.com/0HaLAVh.png"></a>
+  <a href="#"><img src="https://i.imgur.com/JW61R2C.png"></a>
 </p>
 
 ---
@@ -15,9 +14,9 @@
 
 ---
 
-[Lemon Trello Board](https://trello.com/b/tzQ4yjU1/lemonloader)
+[Lemon Loader Trello Board](https://trello.com/b/tzQ4yjU1/lemonloader)
 
-## Lemon Credits
+## Lemon Loader Credits
 - [SirCoolness](https://github.com/SirCoolness)
   - Made the original version of Lemon which gave me a major starting place.
   - Wrote the Android additions to the Bootstrap.
@@ -28,27 +27,18 @@
 - [Someone Somewhere](https://github.com/someonesomewheredev/) - Helped me with various C++ things
 - `Ben 🐾#3621` - Told be about a patching lib that I didn't end up using, but had documentation that helped me fix Dobby
 
-## Lemon Testers
+## Lemon Loader Testers
 - Ben_S
 - Lucy-Cola
 - extraes
 - adamdev
 
 ## GENERAL INFORMATION:
-- [The Official Wiki](https://melonwiki.xyz)
-- [The Lemon Wiki](/../../wiki)
+- [The Melon Loader Wiki](https://melonwiki.xyz)
+- [The Lemon Loader Wiki](/../../wiki)
 
 ---
 
-## ❤️ SPECIAL THANKS TO OUR WONDERFUL PATRONS ❤️
-
-- **Givo**  
-- **Florian Fahrenberger**  
-- **Python**  
-- **SirCoolness**  
-- **SlidyDev**  
-
----
 
 ## LICENSING & CREDITS:
 
