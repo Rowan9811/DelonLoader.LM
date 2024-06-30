@@ -110,6 +110,8 @@ namespace MelonLoader
 
             MelonEvents.MelonHarmonyInit.Invoke();
             MelonEvents.OnApplicationStart.Invoke();
+            //todo try to figure out how to get this shit working
+            //console_hook.Core.ints();
 
             return 0;
         }
