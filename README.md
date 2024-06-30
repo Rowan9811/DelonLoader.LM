@@ -5,12 +5,7 @@
 
 ---
 
-<p align="center">
-	<a href="https://github.com/LemonLoader/MelonLoader/releases/latest"><img src="https://img.shields.io/github/v/release/LemonLoader/MelonLoader?label=latest&style=for-the-badge"></a>
-	<a href="https://github.com/LemonLoader/MelonLoader/releases"><img src="https://img.shields.io/github/downloads/lemonloader/melonloader/latest/MelonLoaderInstaller.apk?style=for-the-badge"></a>
-	<a href="https://github.com/LemonLoader/MelonLoader/graphs/contributors"><img src="https://img.shields.io/github/contributors/LemonLoader/MelonLoader?style=for-the-badge"></a>
-	<a href="https://discord.gg/RAFGe33Y28"><img src="https://img.shields.io/discord/838613285749653534?label=discord&style=for-the-badge&color=blueviolet"></a>
-</p>
+
 
 ---
 
