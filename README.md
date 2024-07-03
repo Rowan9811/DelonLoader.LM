@@ -12,6 +12,8 @@
 6. profit
 ---
 
+if you have any problems please tell me especially if it's anti-cheat related
+
 [Lemon Loader Trello Board](https://trello.com/b/tzQ4yjU1/lemonloader)
 ## Lemon Loader Credits
 - [SirCoolness](https://github.com/SirCoolness)
