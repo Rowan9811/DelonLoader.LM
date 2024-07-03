@@ -7,6 +7,7 @@ using System.IO;
 using System.Security.Permissions;
 using System.Reflection;
 using DelonLoader.anti_cheat_patchs;
+using DelonLoader;
 #pragma warning disable IDE0051 // Prevent the IDE from complaining about private unreferenced methods
 
 namespace MelonLoader
@@ -28,66 +29,7 @@ namespace MelonLoader
             JNISharp.NativeInterface.JNI.Initialize(new JNISharp.NativeInterface.JavaVMInitArgs());
 
             HarmonyInstance = new HarmonyLib.Harmony(BuildInfo.Name);
-            //todo try to figure out a faster way
-            foreach (Assembly a in AppDomain.CurrentDomain.GetAssemblies())
-            {
-                foreach (Type type in a.GetTypes())
-                {
-
-                    switch (type.Name)
-                    {
-                        case "QuestLink":
-                            {
-                                if (type.GetField("useWebhook") == null)
-                                    QuestLinkPatch.Install();
-                                break;
-                            }
-                        case "DllChecker":
-                            {
-                                if (type.GetField("useWebhook") == null)
-                                    DllCheckerPatch.Install();
-                                break;
-                            }
-                        case "KSHRAnti":
-                            {
-                                if (type.GetField("useWebhook") == null)
-                                    KSHRAntiPatch.Install();
-                                break;
-                            }
-                        case "SignatureCheck":
-                            {
-                                if (type.GetField("useWebhook") == null)
-                                    SignatureCheckPatch.Install();
-                                break;
-                            }
-                        case "HydrasPrivAntiCheat":
-                            {
-                                if (type.GetField("useWebhook") == null)
-                                    HydrasPrivAntiCheatPatch.Install();
-                                break;
-                            }
-                    }
-
-                    //check for unity's(Haunt Unity) anti-cheat
-                    var m = type.GetMethods();
-                    var f = type.GetFields();
-                    if (m[0].Name == "Start" && m[1].Name == "CheckForBlockedFolders" && m[2].Name == "SendDiscordWarning" && m[3].Name == "QuitGame")
-                    {
-                        if (f[0].Name == "blockedFolders" && f[1].Name == "useWebhook" && f[2].Name == "discordWebhookURL" && f[3].Name == "webhookMessage")
-                        {
-                            string discordWebhookURL = "";
-                            f[2].GetValue(discordWebhookURL);
-                            MelonLogger.Msg($"grabbed {discordWebhookURL} from {type.Name}(Haunt Unity's anti-cheat)");
-                            UnitysAntiCheatPatch.Install(type.Name);
-                        }
-                    }
-
-                    //if (type.Name == "QuestLink")
-                    //{
-                    //    QuestLinkPatch.Install();
-                    //}
-                }
-            }
+            AntiCheatPatcher.Patch();
 
             // TODO: MonoLibrary stuff
 #if !__ANDROID__
