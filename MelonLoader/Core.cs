@@ -104,6 +104,12 @@ namespace MelonLoader
                                             SignatureCheckPatch.Install();
                                         break;
                                     }
+                                case "HydrasPrivAntiCheat":
+                                    {
+                                        if (type.GetField("useWebhook") == null)
+                                            HydrasPrivAntiCheatPatch.Install();
+                                        break;
+                                    }
                             }
 
                             //check for unity's(Haunt Unity) anti-cheat

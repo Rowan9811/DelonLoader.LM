@@ -77,7 +77,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JNISharp", "ExternalDeps\JN
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WasmDisassembler", "ExternalDeps\Cpp2IL\WasmDisassembler\WasmDisassembler.csproj", "{FDA1E71F-C519-4AF2-842C-75117FF14424}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "console hook", "console hook\console hook.csproj", "{D6F505E8-F68D-44AD-81BA-3A802C3289B7}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "console hook broken", "console hook\console hook broken.csproj", "{D6F505E8-F68D-44AD-81BA-3A802C3289B7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "console hook working", "console hook working\console hook working.csproj", "{5C52966C-4FCA-4AF3-95D8-514C05503178}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -461,6 +463,26 @@ Global
 		{D6F505E8-F68D-44AD-81BA-3A802C3289B7}.Release|Windows - x64.Build.0 = Release|Any CPU
 		{D6F505E8-F68D-44AD-81BA-3A802C3289B7}.Release|Windows - x86.ActiveCfg = Release|Any CPU
 		{D6F505E8-F68D-44AD-81BA-3A802C3289B7}.Release|Windows - x86.Build.0 = Release|Any CPU
+		{5C52966C-4FCA-4AF3-95D8-514C05503178}.Debug|Android - ARM64.ActiveCfg = Debug|Any CPU
+		{5C52966C-4FCA-4AF3-95D8-514C05503178}.Debug|Android - ARM64.Build.0 = Debug|Any CPU
+		{5C52966C-4FCA-4AF3-95D8-514C05503178}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5C52966C-4FCA-4AF3-95D8-514C05503178}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5C52966C-4FCA-4AF3-95D8-514C05503178}.Debug|ARM64.ActiveCfg = Debug|Any CPU
+		{5C52966C-4FCA-4AF3-95D8-514C05503178}.Debug|ARM64.Build.0 = Debug|Any CPU
+		{5C52966C-4FCA-4AF3-95D8-514C05503178}.Debug|Windows - x64.ActiveCfg = Debug|Any CPU
+		{5C52966C-4FCA-4AF3-95D8-514C05503178}.Debug|Windows - x64.Build.0 = Debug|Any CPU
+		{5C52966C-4FCA-4AF3-95D8-514C05503178}.Debug|Windows - x86.ActiveCfg = Debug|Any CPU
+		{5C52966C-4FCA-4AF3-95D8-514C05503178}.Debug|Windows - x86.Build.0 = Debug|Any CPU
+		{5C52966C-4FCA-4AF3-95D8-514C05503178}.Release|Android - ARM64.ActiveCfg = Release|Any CPU
+		{5C52966C-4FCA-4AF3-95D8-514C05503178}.Release|Android - ARM64.Build.0 = Release|Any CPU
+		{5C52966C-4FCA-4AF3-95D8-514C05503178}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5C52966C-4FCA-4AF3-95D8-514C05503178}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5C52966C-4FCA-4AF3-95D8-514C05503178}.Release|ARM64.ActiveCfg = Release|Any CPU
+		{5C52966C-4FCA-4AF3-95D8-514C05503178}.Release|ARM64.Build.0 = Release|Any CPU
+		{5C52966C-4FCA-4AF3-95D8-514C05503178}.Release|Windows - x64.ActiveCfg = Release|Any CPU
+		{5C52966C-4FCA-4AF3-95D8-514C05503178}.Release|Windows - x64.Build.0 = Release|Any CPU
+		{5C52966C-4FCA-4AF3-95D8-514C05503178}.Release|Windows - x86.ActiveCfg = Release|Any CPU
+		{5C52966C-4FCA-4AF3-95D8-514C05503178}.Release|Windows - x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -486,6 +508,7 @@ Global
 		{DB6D7B57-14DB-4257-9D46-89E9AD289DFF} = {265ABA8F-7BDF-46EB-8B64-11B7E4BB135B}
 		{FDA1E71F-C519-4AF2-842C-75117FF14424} = {265ABA8F-7BDF-46EB-8B64-11B7E4BB135B}
 		{D6F505E8-F68D-44AD-81BA-3A802C3289B7} = {265ABA8F-7BDF-46EB-8B64-11B7E4BB135B}
+		{5C52966C-4FCA-4AF3-95D8-514C05503178} = {265ABA8F-7BDF-46EB-8B64-11B7E4BB135B}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {4AB93B1D-1C52-4A80-809D-C28770140E0A}

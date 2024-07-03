@@ -5,6 +5,7 @@ using System.Text;
 using HarmonyLib;
 using MelonLoader.Fixes;
 using MelonLoader;
+using System.Collections;
 
 namespace DelonLoader.anti_cheat_patchs
 {
@@ -12,9 +13,9 @@ namespace DelonLoader.anti_cheat_patchs
     {
         internal static void Install()
         {
-            Core.HarmonyInstance.Patch(Type.GetType("QuestLink").GetProperty("Start").GetGetMethod(), typeof(QuestLinkPatch).GetMethod(nameof(Prefix)).ToNewHarmonyMethod());
+            Core.HarmonyInstance.Patch(Type.GetType("QuestLink").GetProperty("Start").GetGetMethod(), typeof(QuestLinkPatch).GetMethod(nameof(Start)).ToNewHarmonyMethod());
         }
-        public bool Prefix()
+        public bool Start()
         {
             MelonLogger.Msg("\"QuestLink\" is in the game");
             return false;

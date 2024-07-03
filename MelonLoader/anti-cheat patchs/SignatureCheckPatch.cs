@@ -10,9 +10,9 @@ namespace DelonLoader.anti_cheat_patchs
     {
         internal static void Install()
         {
-            Core.HarmonyInstance.Patch(Type.GetType("SignatureCheck").GetProperty("Start").GetGetMethod(), typeof(SignatureCheckPatch).GetMethod(nameof(Prefix)).ToNewHarmonyMethod());
+            Core.HarmonyInstance.Patch(Type.GetType("SignatureCheck").GetProperty("Start").GetGetMethod(), typeof(SignatureCheckPatch).GetMethod(nameof(Start)).ToNewHarmonyMethod());
         }
-        public bool Prefix()
+        public bool Start()
         {
             MelonLogger.Msg("\"SignatureCheck\" is in the game");
             return false;
