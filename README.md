@@ -25,7 +25,7 @@ I won't tell people how to use this until it works.
 
 ## GENERAL INFORMATION:
 - [The ML Wiki](https://melonwiki.xyz)
-- [The LM Wiki](/../../wiki)
+- [The LM Wiki](https://github.com/LemonLoader/MelonLoader/wiki)
 
 ## LICENSING & CREDITS:
 
