@@ -1,20 +1,15 @@
-[submodule "Bootstrap/external/capstone"]
-	path = Bootstrap/external/capstone
-	url = https://github.com/capstone-engine/capstone.git
-[submodule "Bootstrap/external/funchook"]
-	path = Bootstrap/external/funchook
-	url = https://github.com/LemonLoader/funchook.git
-[submodule "Bootstrap/external/dobby"]
-	path = Bootstrap/external/dobby
-	url = https://github.com/jmpews/Dobby.git
-[submodule "ExternalDeps/Il2CppAssemblyUnhollower"]
-	path = ExternalDeps/Il2CppAssemblyUnhollower
-	url = https://github.com/LemonLoader/Il2CppAssemblyUnhollower.git
-	branch = lemon
-[submodule "ExternalDeps/Cpp2IL"]
-	path = ExternalDeps/Cpp2IL
-	url = https://github.com/LemonLoader/Cpp2IL.git
-	branch = new-analysis
-[submodule "ExternalDeps/JNISharp"]
-	path = ExternalDeps/JNISharp
+[submodule "External/JNISharp"]
+	path = External/JNISharp
 	url = https://github.com/LemonLoader/JNISharp.git
+[submodule "External/MonoMod"]
+	path = External/MonoMod
+	url = https://github.com/LemonLoader/MonoMod.git
+[submodule "External/HarmonyX"]
+	path = External/HarmonyX
+	url = https://github.com/LemonLoader/HarmonyX.git
+[submodule "External/Cpp2IL"]
+	path = External/Cpp2IL
+	url = https://github.com/SamboyCoding/Cpp2IL.git
+[submodule "External/Il2CppInterop"]
+	path = External/Il2CppInterop
+	url = https://github.com/LemonLoader/Il2CppInterop.git

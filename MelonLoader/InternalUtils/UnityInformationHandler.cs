@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices;
-using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.RegularExpressions;
 using AssetsTools.NET;
 using AssetsTools.NET.Extra;
+using System.Drawing;
+using MelonLoader.Utils;
 using UnityVersion = AssetRipper.VersionUtilities.UnityVersion;
 
 namespace MelonLoader.InternalUtils
@@ -19,65 +19,56 @@ namespace MelonLoader.InternalUtils
 
         public static string GameName { get; private set; }
         public static string GameDeveloper { get; private set; }
-        public static UnityVersion EngineVersion { get; private set; } = UnityVersion.MinVersion;
+        public static UnityVersion EngineVersion { get; private set; }
         public static string GameVersion { get; private set; }
+
+        private static UnityVersion TryParse(string version)
+        {
+            UnityVersion returnval = UnityVersion.MinVersion;
+            try 
+            {
+                returnval = UnityVersion.Parse(version); 
+            }
+            catch (Exception ex)
+            {
+                if (MelonDebug.IsEnabled())
+                    MelonLogger.Error(ex);
+                returnval = UnityVersion.MinVersion;
+            }
+            return returnval;
+        }
 
         internal static void Setup()
         {
-            string gameDataPath = MelonUtils.GetGameDataDirectory();
+            string gameDataPath = MelonEnvironment.UnityGameDataDirectory;
 
             if (!string.IsNullOrEmpty(MelonLaunchOptions.Core.UnityVersion))
-            {
-                try { EngineVersion = UnityVersion.Parse(MelonLaunchOptions.Core.UnityVersion); }
-                catch (Exception ex)
-                {
-                    if (MelonDebug.IsEnabled())
-                        MelonLogger.Error(ex);
-                }
-            }
+                EngineVersion = TryParse(MelonLaunchOptions.Core.UnityVersion);
 
-#if !__ANDROID__
             AssetsManager assetsManager = new AssetsManager();
             ReadGameInfo(assetsManager, gameDataPath);
             assetsManager.UnloadAll();
-#else
-            GameName = MelonUtils.GameName;
-            GameDeveloper = MelonUtils.GameDeveloper;
-            EngineVersion = UnityVersion.Parse(MelonUtils.UnityVersion);
-            GameVersion = MelonUtils.GameVersion;
-#endif
 
             if (string.IsNullOrEmpty(GameDeveloper)
                 || string.IsNullOrEmpty(GameName))
                 ReadGameInfoFallback();
 
             if (EngineVersion == UnityVersion.MinVersion)
-            {
-                try { EngineVersion = ReadVersionFallback(gameDataPath); }
-                catch (Exception ex)
-                {
-                    if (MelonDebug.IsEnabled())
-                        MelonLogger.Error(ex);
-                }
-            }
+                EngineVersion = ReadVersionFallback(gameDataPath);
 
             if (string.IsNullOrEmpty(GameDeveloper))
                 GameDeveloper = DefaultInfo;
             if (string.IsNullOrEmpty(GameName))
                 GameName = DefaultInfo;
-
-#if !__ANDROID__
-            SetDefaultConsoleTitleWithGameName(GameName, GameVersion);
-#endif
             if (string.IsNullOrEmpty(GameVersion))
                 GameVersion = DefaultInfo;
 
-            MelonLogger.WriteLine(ConsoleColor.Magenta);
+            MelonLogger.WriteLine(Color.Magenta);
             MelonLogger.Msg($"Game Name: {GameName}");
             MelonLogger.Msg($"Game Developer: {GameDeveloper}");
             MelonLogger.Msg($"Unity Version: {EngineVersion}");
             MelonLogger.Msg($"Game Version: {GameVersion}");
-            MelonLogger.WriteLine(ConsoleColor.Magenta);
+            MelonLogger.WriteLine(Color.Magenta);
             MelonLogger.WriteSpacer();
         }
 
@@ -87,20 +78,25 @@ namespace MelonLoader.InternalUtils
             try
             {
                 string bundlePath = Path.Combine(gameDataPath, "globalgamemanagers");
-                if (!File.Exists(bundlePath))
+                if (!APKAssetManager.DoesAssetExist(bundlePath))
                     bundlePath = Path.Combine(gameDataPath, "mainData");
 
-                if (!File.Exists(bundlePath))
+                if (!APKAssetManager.DoesAssetExist(bundlePath))
                 {
                     bundlePath = Path.Combine(gameDataPath, "data.unity3d");
-                    if (!File.Exists(bundlePath))
+                    if (!APKAssetManager.DoesAssetExist(bundlePath))
                         return;
 
-                    BundleFileInstance bundleFile = assetsManager.LoadBundleFile(bundlePath);
+                    Stream bundleStream = APKAssetManager.GetAssetStream(bundlePath);
+                    BundleFileInstance bundleFile = assetsManager.LoadBundleFile(bundleStream, bundlePath);
                     instance = assetsManager.LoadAssetsFileFromBundle(bundleFile, "globalgamemanagers");
                 }
                 else
-                    instance = assetsManager.LoadAssetsFile(bundlePath, true);
+                {
+                    Stream bundleStream = APKAssetManager.GetAssetStream(bundlePath);
+                    instance = assetsManager.LoadAssetsFile(bundleStream, bundlePath, true);
+                }
+
                 if (instance == null)
                     return;
 
@@ -109,7 +105,7 @@ namespace MelonLoader.InternalUtils
                     assetsManager.LoadClassDatabaseFromPackage(instance.file.Metadata.UnityVersion);
 
                 if (EngineVersion == UnityVersion.MinVersion)
-                    EngineVersion = UnityVersion.Parse(instance.file.Metadata.UnityVersion);
+                    EngineVersion = TryParse(instance.file.Metadata.UnityVersion);
 
                 List<AssetFileInfo> assetFiles = instance.file.GetAssetsOfType(AssetClassID.PlayerSettings);
                 if (assetFiles.Count > 0)
@@ -133,11 +129,10 @@ namespace MelonLoader.InternalUtils
                     }
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 if (MelonDebug.IsEnabled())
                     MelonLogger.Error(ex);
-                //MelonLogger.Error("Failed to Initialize Assets Manager!");
             }
             if (instance != null)
                 instance.file.Close();
@@ -145,9 +140,10 @@ namespace MelonLoader.InternalUtils
 
         private static void ReadGameInfoFallback()
         {
-            try
+            // i don't think any android apps have app.info and i don't know any other way to get game info (unless i just parse the package name, but that's kinda dumb)
+            /*try
             {
-                string appInfoFilePath = Path.Combine(MelonUtils.GetGameDataDirectory(), "app.info");
+                string appInfoFilePath = Path.Combine(MelonEnvironment.UnityGameDataDirectory, "app.info");
                 if (!File.Exists(appInfoFilePath))
                     return;
 
@@ -166,26 +162,16 @@ namespace MelonLoader.InternalUtils
             {
                 if (MelonDebug.IsEnabled())
                     MelonLogger.Error(ex);
-            }
+            }*/
         }
 
         private static UnityVersion ReadVersionFallback(string gameDataPath)
         {
-            string unityPlayerPath = Path.Combine(MelonUtils.GameDirectory, "UnityPlayer.dll");
-            if (!File.Exists(unityPlayerPath))
-                unityPlayerPath = MelonUtils.GetApplicationPath();
-
-            if (Environment.OSVersion.Platform == PlatformID.Win32NT)
-            {
-                var unityVer = FileVersionInfo.GetVersionInfo(unityPlayerPath);
-                return new UnityVersion((ushort)unityVer.FileMajorPart, (ushort)unityVer.FileMinorPart, (ushort)unityVer.FileBuildPart);
-            }
-
             try
             {
                 var globalgamemanagersPath = Path.Combine(gameDataPath, "globalgamemanagers");
-                if (File.Exists(globalgamemanagersPath))
-                    return GetVersionFromGlobalGameManagers(File.ReadAllBytes(globalgamemanagersPath));
+                if (APKAssetManager.DoesAssetExist(globalgamemanagersPath))
+                    return GetVersionFromGlobalGameManagers(APKAssetManager.GetAssetBytes(globalgamemanagersPath));
             }
             catch (Exception ex)
             {
@@ -196,8 +182,8 @@ namespace MelonLoader.InternalUtils
             try
             {
                 var dataPath = Path.Combine(gameDataPath, "data.unity3d");
-                if (File.Exists(dataPath))
-                    return GetVersionFromDataUnity3D(File.OpenRead(dataPath));
+                if (APKAssetManager.DoesAssetExist(dataPath))
+                    return GetVersionFromDataUnity3D(APKAssetManager.GetAssetStream(dataPath));
             }
             catch (Exception ex)
             {
@@ -205,7 +191,7 @@ namespace MelonLoader.InternalUtils
                     MelonLogger.Error(ex);
             }
 
-            return default;
+            return UnityVersion.MinVersion;
         }
 
         private static UnityVersion GetVersionFromGlobalGameManagers(byte[] ggmBytes)
@@ -233,7 +219,7 @@ namespace MelonLoader.InternalUtils
                 unityVer = verString.ToString().Trim();
             }
 
-            return UnityVersion.Parse(unityVer);
+            return TryParse(unityVer);
         }
 
         private static UnityVersion GetVersionFromDataUnity3D(Stream fileStream)
@@ -256,11 +242,7 @@ namespace MelonLoader.InternalUtils
                 verString.Append(Convert.ToChar(read));
             }
 
-            return UnityVersion.Parse(verString.ToString().Trim());
+            return TryParse(verString.ToString().Trim());
         }
-
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        [return: MarshalAs(UnmanagedType.LPStr)]
-        private extern static void SetDefaultConsoleTitleWithGameName([MarshalAs(UnmanagedType.LPStr)] string GameName, [MarshalAs(UnmanagedType.LPStr)] string GameVersion = null);
     }
 }

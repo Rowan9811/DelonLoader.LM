@@ -19,11 +19,15 @@ namespace MelonLoader.Fixes
 			}
 			catch (Exception ex) { MelonLogger.Warning($"InstancePatchFix Exception: {ex}"); }
 
-			Hook.OnDetour += (detour, originalMethod, patchMethod, delegateTarget) => PatchMethod(patchMethod);
-			Detour.OnDetour += (detour, originalMethod, patchMethod) => PatchMethod(patchMethod);
+            DetourManager.DetourApplied += DetourManager_DetourApplied;
 		}
 
-		private static bool PatchMethod(MethodBase __0)
+        private static void DetourManager_DetourApplied(DetourInfo obj)
+        {
+			PatchMethod(obj.Method.Method);
+        }
+
+        private static bool PatchMethod(MethodBase __0)
         {
 			if (__0 == null)
 				throw new NullReferenceException("Patch Method");

@@ -1,6 +1,8 @@
 ﻿using System;
+using System.IO;
 using System.Reflection;
 using MelonLoader.MonoInternals.ResolveInternals;
+using MelonLoader.Utils;
 
 namespace MelonLoader.MonoInternals
 {
@@ -11,19 +13,23 @@ namespace MelonLoader.MonoInternals
             if (!AssemblyManager.Setup())
                 return false;
 
-
             // Setup Search Directories
             string[] searchdirlist =
             {
-                MelonUtils.MelonLoaderDirectory,
-                MelonUtils.UserLibsDirectory,
-                MelonHandler.PluginsDirectory,
-                MelonHandler.ModsDirectory,
-                MelonUtils.BaseDirectory,
-                MelonUtils.GameDirectory
+                MelonEnvironment.UserLibsDirectory,
+                MelonEnvironment.PluginsDirectory,
+                MelonEnvironment.ModsDirectory,
+                MelonEnvironment.MelonBaseDirectory,
+                MelonEnvironment.GameRootDirectory,
+                MelonEnvironment.OurRuntimeDirectory,
             };
             foreach (string path in searchdirlist)
                 AddSearchDirectory(path);
+            
+            ForceResolveRuntime("Mono.Cecil.dll");
+            ForceResolveRuntime("MonoMod.exe");
+            ForceResolveRuntime("MonoMod.Utils.dll");
+            ForceResolveRuntime("MonoMod.RuntimeDetour.dll");
 
             // Setup Redirections
             string[] assembly_list =
@@ -40,13 +46,27 @@ namespace MelonLoader.MonoInternals
             return true;
         }
 
+        private static void ForceResolveRuntime(string fileName)
+        {
+            string filePath = Path.Combine(MelonEnvironment.OurRuntimeDirectory, fileName);
+            if (!File.Exists(filePath))
+                return;
+
+            Assembly assembly = null;
+            try { assembly = Assembly.LoadFrom(filePath); }
+            catch { assembly = null; }
+            
+            if (assembly == null)
+                return;
+
+            GetAssemblyResolveInfo(Path.GetFileNameWithoutExtension(fileName)).Override = assembly;
+        }
+
         // Search Directories
         public static void AddSearchDirectory(string path, int priority = 0)
             => SearchDirectoryManager.Add(path, priority);
-
         public static void RemoveSearchDirectory(string path)
             => SearchDirectoryManager.Remove(path);
-
 
         // Assembly
         public delegate void OnAssemblyLoadHandler(Assembly assembly);

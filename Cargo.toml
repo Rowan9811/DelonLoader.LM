@@ -1,0 +1,6 @@
+[workspace]
+members = ["Rust/Bootstrap", "Rust/MelonProxy"]
+resolver = "2"
+
+[patch.crates-io]
+nethost-sys = { git = "https://github.com/TrevTV/nethost-sys" }

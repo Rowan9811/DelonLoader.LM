@@ -1,17 +1,13 @@
 ﻿using System;
 using System.IO;
 using System.IO.Compression;
+using System.Linq;
 using MelonLoader.Lemons.Cryptography;
 
 namespace MelonLoader.Il2CppAssemblyGenerator
 {
     internal static class FileHandler
     {
-        private static LemonSHA512 sha512 = new LemonSHA512();
-
-        internal static string Hash(string filepath)
-            => BitConverter.ToString(sha512.ComputeHash(File.ReadAllBytes(filepath))).Replace("-", "").ToLowerInvariant();
-            
         internal static bool Download(string url, string destination)
         {
             if (string.IsNullOrEmpty(url))
@@ -44,7 +40,7 @@ namespace MelonLoader.Il2CppAssemblyGenerator
             return true;
         }
 
-        internal static bool Process(string filepath, string destination)
+        internal static bool Process(string filepath, string destination, string targetName = null)
         {
             if (string.IsNullOrEmpty(filepath))
             {
@@ -96,6 +92,10 @@ namespace MelonLoader.Il2CppAssemblyGenerator
             if (!filename.EndsWith(".zip"))
             {
                 Core.Logger.Msg($"Moving {filepath} to {destination}");
+                
+                if (!string.IsNullOrEmpty(targetName))
+                    destination = Path.Combine(destination, targetName);
+                
                 File.Move(filepath, destination);
                 return true;
             }

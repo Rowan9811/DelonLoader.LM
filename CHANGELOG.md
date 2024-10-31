@@ -1,5 +1,11 @@
 | Versions: |
 | - |
+| [v0.6.5](#v065) |
+| [v0.6.4](#v064) |
+| [v0.6.3](#v063) |
+| [v0.6.2](#v062) |
+| [v0.6.1](#v061) |
+| [v0.6.0](#v060) |
 | [v0.5.7](#v057) |
 | [v0.5.5](#v055) |
 | [v0.5.4](#v054) |
@@ -28,6 +34,118 @@
 | [v0.0.3](#v003) |
 | [v0.0.2](#v002) |
 | [v0.0.1](#v001) |
+
+---
+
+### v0.6.5
+
+1. Updated Il2CppInterop to 1.4.6-ci.545
+2. Updated Cpp2IL to 2022.1.0-pre-release.18
+3. Updated AsmResolver to 6.0.0-beta.1
+4. Updated AssetRipper.VersionUtilities to 1.5.0
+5. Updated AssetsTools.NET to 3.0.0
+6. Updated UnityEngine.Il2CppAssetBundleManager for latest compatibility
+7. Updated UnityEngine.Il2CppImageConversionManager for latest compatibility
+8. Implemented `--cpp2il.callanalyzer` launch option to enable Cpp2IL's CallAnalyzer processor
+9. Implemented `--cpp2il.nativemethoddetector` launch option to enable Cpp2IL's NativeMethodDetector processor
+10. Implemented several fixes for Il2CppInterop related issues
+11. Implemented `ExternalArguments` Dictionary for MelonLaunchOptions   (Credits to [HAHOOS](https://github.com/HAHOOS) :P)
+12. Implemented `MsgPastel` Method for MelonLogger   (Credits to [HAHOOS](https://github.com/HAHOOS) :P)
+13. Implemented `Peek` Method for LemonEnumerator
+14. Implemented ICallInjector for handling when Unity strips or renames Internal Calls
+15. Fixed an accidental regression with LemonSHA256
+16. Fixed an issue with Native logs using the wrong Colors
+17. Fixed an issue with Preload module not replacing Mono libraries on Older Mono Games
+18. Fixed an issue with MonoMod DetourContext Disposal not working properly
+19. Fixed an issue with Debugger Launch Option causing crashes
+20. Fixed an issue with Console not having the Game Name and Version in the title
+21. Fixed an issue with Sharing Violation during Log Initialization
+22. Fixed an issue with `--melonloader.basedir` launch option always expecting an `=` sign before the path
+23. Fixed an issue with Il2CppInteropFixes not being properly error handled
+24. Fixed an issue with Il2CppInteropFixes using `il2cpp_type_get_class_or_element_class` instead of `il2cpp_class_from_type`
+25. Fixed an issue with EOS Support Module not being properly error handled
+26. Fixed an issue with NativeStackWalk not unregistering addresses
+27. Fixed an issue with Errors being Spammed if `UnityEngine.Transform::SetAsLastSibling` fails to resolve
+28. Fixed an issue with MelonLaunchOptions failing to parse options if a `-` prefix is used instead of `--`
+29. Fixed an issue with MelonLaunchOptions failing to parse option arguments if an `=` sign is used instead of a space
+30. Fixed an issue with Command Line Arguments not being logged
+31. Fixed an issue with Il2CppInterop Assembly Resolving when Il2Cpp Prefixing is used
+32. Fixed an issue with .NET Executables not being Resolved properly when used as Dependencies
+33. Fixed an issue with Dependency Graph failing to Resolve Assemblies properly
+34. Fixed an issue with Il2Cpp Support Module not attempting to use direct references
+
+---
+
+### v0.6.4
+
+1. Removed Analytics Blocker for causing crashes, will be ported to its own Plugin
+2. Updated Cpp2IL to 2022.1.0-pre-release.15
+
+---
+
+### v0.6.3
+
+1. Updated NuGet Packages
+2. Updated Cpp2IL to 2022.1.0-pre-release.14
+3. Updated Il2CppInterop to 1.4.6-ci.433
+4. Updated Tomlet to 5.3.1
+5. Fixed Referenced DLLs not being resolved properly resulting in crashes
+6. Fixed Proxy being unable to find Original DLL    (Credits to [RinLovesYou](https://github.com/RinLovesYou) :3)
+7. Fixed LoadLibrary failing on in rare cases    (Credits to [RinLovesYou](https://github.com/RinLovesYou) :3)
+8. Fixed Preload Module failing to initialize included resources   (Credits to [TrevTV](https://github.com/TrevTV) :P)
+9. Reimplemented Log Caching and Logs folder
+10. Implemented Additional Initialization Error Handling
+11. Implemented Garbage Collection handling for NativeHook
+12. Rewrote the Demeo Compatibility Layer to be less prone to breakage
+13. Fixed DarkRed ConsoleColor   (Credits to [Scoolnik](https://github.com/Scoolnik) :D)
+14. Fixed several .NET Framework 2.0 compatibility issues   (Credits to [slxdy](https://github.com/slxdy) :D)
+15. Fixed an issue with Mods loading when Il2Cpp Assembly Generation fails
+16. Added `--melonloader.sab` Launch Option to disable the Analytics Blocker
+17. Fixed an issue with MelonCompatibilityLayer causing crashes on some games
+
+---
+
+### v0.6.2
+
+1. Added a compatibility layer for EOS (Epic Online Services), preventing a crash caused by the Overlay
+2. Updated Cpp2IL
+3. Updated Tomlet
+5. Updated `MelonLoader.NativeUtils.NativeHook` to prevent GC issues 
+6. Updated Il2CppAssetBundleManager for Il2CppInterop
+7. Fixed Proxy being unable to find System32 when Windows is not installed in C:
+8. Fixed logger sha256 hash (Credits to [Windows10CE](https://github.com/Windows10CE))
+9. Fixed DAB Thread safety & Oculus Profile Pictures (Credits to [SirCoolness](https://github.com/SirCoolness))
+10. Fix Melon Load Order (Credits to [Loukylor](https://github.com/loukylor))
+11. General fixes for Proxy & Bootstrap
+
+---
+
+### v0.6.1
+
+1. Refactored Bootstrap, more informative errors
+2. Updated classdata.tpk, fixing some issues when reading game versions
+3. Deprecated NativeHooks, giving a new utility class `MelonLoader.NativeUtils.NativeHook<T> where T : Delegate`
+4. Updated MonoMod, fixing some issues with old Mono Games
+5. Fix some compatibility issues for certain Mono Games
+6. Implemented some missing launch options
+
+---
+
+### v0.6.0:
+
+1. Added Linux Support   (Credits to [RinLovesYou](https://github.com/RinLovesYou) :3)
+2. Switched the runtime to .NET 6 CoreCLR for Il2Cpp Games (Credits to [SamboyCoding](https://github.com/SamboyCoding) :D)
+3. Moved a lot of logic from Native to Managed   (Credits to [SamboyCoding](https://github.com/SamboyCoding) & [RinLovesYou](https://github.com/RinLovesYou) :D)
+4. Replaced Unhollower with Il2CppInterop   (Credits to [SamboyCoding](https://github.com/SamboyCoding), [nitrog0d](https://github.com/nitrog0d) & [ds5678](https://github.com/ds5678) :D)
+5. Rewrote Proxy & Bootstrap   (Credits to [RinLovesYou](https://github.com/RinLovesYou) :3)
+6. Fixed some start screen corruption
+7. Added helper methods for determining current platform
+8. added `Utils.MelonConsole` for printing to console on mono games
+9. Removed Il2CppDumper
+10. Update HarmonyX, MonoMod, and Tomlet
+11. Switched from MSDetours to Dobby
+12. Added full RGB color support in console using Pastel
+13. Added `MelonEnvironment` class
 
 ---
 

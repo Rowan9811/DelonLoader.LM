@@ -1,6 +1,8 @@
 ﻿using System.IO;
+using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Runtime.CompilerServices;
+using System;
 
 namespace MelonLoader.Support
 {
@@ -8,19 +10,29 @@ namespace MelonLoader.Support
     {
         private static void Initialize()
         {
-            string ManagedFolder = string.Copy(GetManagedDirectory());
+            if (Environment.Version >= new Version("3.0.0.0"))
+                return;
 
-            string SystemPath = Path.Combine(ManagedFolder, "System.dll");
-            if (!File.Exists(SystemPath))
-                File.WriteAllBytes(SystemPath, Properties.Resources.System);
+            string managedFolder = string.Copy(GetManagedDirectory());
 
-            string SystemCorePath = Path.Combine(ManagedFolder, "System.Core.dll");
-            if (!File.Exists(SystemCorePath))
-                File.WriteAllBytes(SystemCorePath, Properties.Resources.System_Core);
+            WriteResource(Properties.Resources.System, Path.Combine(managedFolder, "System.dll"));
+            WriteResource(Properties.Resources.System_Core, Path.Combine(managedFolder, "System.Core.dll"));
+            WriteResource(Properties.Resources.System_Drawing, Path.Combine(managedFolder, "System.Drawing.dll"));
         }
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         [return: MarshalAs(UnmanagedType.LPStr)]
-        private extern static string GetManagedDirectory();
+        private static extern string GetManagedDirectory();
+
+        private static void WriteResource(byte[] data, string destination)
+        {
+            try
+            {
+                if (File.Exists(destination))
+                    File.Delete(destination);
+                File.WriteAllBytes(destination, data);
+            }
+            catch { }
+        }
     }
 }

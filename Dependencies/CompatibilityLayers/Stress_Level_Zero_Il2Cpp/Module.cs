@@ -54,15 +54,15 @@ namespace MelonLoader.CompatibilityLayers
         private static MelonEvent<int, string>.MelonEventSubscriber[] SceneInitBackup;
         private static void PreSceneEvent()
         {
-            SceneInitBackup = MelonEvents.OnSceneWasInitialized.GetSubscribers();
-            MelonEvents.OnSceneWasInitialized.UnsubscribeAll();
-            MelonEvents.OnSceneWasInitialized.Subscribe(OnSceneInit, int.MinValue);
+            SceneInitBackup = MelonEvents.OnSceneWasInitialized?.GetSubscribers();
+            MelonEvents.OnSceneWasInitialized?.UnsubscribeAll();
+            MelonEvents.OnSceneWasInitialized?.Subscribe(OnSceneInit, int.MinValue);
         }
         private static void PostSceneEvent()
         {
-            MelonEvents.OnSceneWasInitialized.UnsubscribeAll();
+            MelonEvents.OnSceneWasInitialized?.UnsubscribeAll();
             foreach (var sub in SceneInitBackup)
-                MelonEvents.OnSceneWasInitialized.Subscribe(sub.del, sub.priority, sub.unsubscribeOnFirstInvocation);
+                MelonEvents.OnSceneWasInitialized?.Subscribe(sub.del, sub.priority, sub.unsubscribeOnFirstInvocation);
             SceneInitBackup = null;
         }
     }

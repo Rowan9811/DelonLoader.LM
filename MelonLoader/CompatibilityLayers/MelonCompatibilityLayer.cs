@@ -1,25 +1,24 @@
 ﻿using MelonLoader.Modules;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
+using MelonLoader.Utils;
 
 namespace MelonLoader
 {
     public static class MelonCompatibilityLayer
     {
-#if __ANDROID__
-        public static string baseDirectory = $"melonloader/etc/compatibilitylayers";
-#else
-        public static string baseDirectory = $"MelonLoader{Path.DirectorySeparatorChar}Dependencies{Path.DirectorySeparatorChar}CompatibilityLayers";
-#endif
+        public static string baseDirectory = $"{MelonEnvironment.GameRootDirectory}{Path.DirectorySeparatorChar}MelonLoader{Path.DirectorySeparatorChar}Dependencies{Path.DirectorySeparatorChar}CompatibilityLayers";
 
         private static List<MelonModule.Info> layers = new List<MelonModule.Info>()
         {
-            // Il2Cpp Unity Tls
-            new MelonModule.Info(Path.Combine(baseDirectory, "Il2CppUnityTls.dll"), () => !MelonUtils.IsGameIl2Cpp()),
+            // Il2Cpp Unity Tls - No longer needed in CoreCLR
+            // new MelonModule.Info(Path.Combine(baseDirectory, "Il2CppUnityTls.dll"), () => !MelonUtils.IsGameIl2Cpp()),
 
             // Illusion Plugin Architecture
             new MelonModule.Info(Path.Combine(baseDirectory, "IPA.dll"), MelonUtils.IsGameIl2Cpp),
+            new MelonModule.Info(Path.Combine(baseDirectory, "EOS.dll"), () => !MelonUtils.IsWindows)
         };
         
         private static void CheckGameLayerWithPlatform(string name, Func<bool> shouldBeIgnored)
@@ -38,6 +37,15 @@ namespace MelonLoader
             CheckGameLayerWithPlatform(name, () => false);
             CheckGameLayerWithPlatform($"{name}_Mono", () => MelonUtils.IsGameIl2Cpp());
             CheckGameLayerWithPlatform($"{name}_Il2Cpp", () => !MelonUtils.IsGameIl2Cpp());
+
+            int spaceIndex = name.IndexOf(' ');
+            if (spaceIndex > 0)
+            {
+                name = name.Substring(0, spaceIndex - 1);
+                CheckGameLayerWithPlatform(name, () => false);
+                CheckGameLayerWithPlatform($"{name}_Mono", () => MelonUtils.IsGameIl2Cpp());
+                CheckGameLayerWithPlatform($"{name}_Il2Cpp", () => !MelonUtils.IsGameIl2Cpp());
+            }
         }
 
         internal static void LoadModules()
@@ -50,15 +58,20 @@ namespace MelonLoader
             CheckGameLayer($"{InternalUtils.UnityInformationHandler.GameDeveloper}_{InternalUtils.UnityInformationHandler.GameName}");
 
             foreach (var m in layers)
+            {
+                if ((m.shouldBeIgnored != null)
+                    && m.shouldBeIgnored())
+                    continue;
+
+                MelonDebug.Msg($"Loading MelonModule '{m.fullPath}'");
                 MelonModule.Load(m);
+            }
 
             foreach (var file in Directory.GetFiles(baseDirectory))
             {
                 string fileName = Path.GetFileName(file);
                 if (layers.Find(x => Path.GetFileName(x.fullPath).Equals(fileName)) == null)
-                {
                     File.Delete(file);
-                }
             }
         }
     }

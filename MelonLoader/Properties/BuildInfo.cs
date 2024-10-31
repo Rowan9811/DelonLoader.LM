@@ -2,10 +2,10 @@
 {
     public static class BuildInfo
     {
-        public const string Name = "DelonLoader";
-        public const string Description = "DelonLoader";
-        public const string Author = "Lava";
-        public const string Company = "GG";
-        public const string Version = "0.5.7";
+        public const string Name = "MelonLoader";
+        public const string Description = "MelonLoader";
+        public const string Author = "Lava Gang";
+        public const string Company = "discord.gg/2Wn3N2P";
+        public const string Version = "0.6.5";
     }
 }

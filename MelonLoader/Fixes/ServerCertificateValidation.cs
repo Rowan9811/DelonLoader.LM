@@ -1,32 +1,39 @@
-﻿using System;
+﻿#if !NET6_0_OR_GREATER
+using System;
 using System.Net;
 using System.Net.Security;
 using System.Reflection;
 using System.Security.Cryptography.X509Certificates;
+#endif
 
 namespace MelonLoader.Fixes
 {
     internal static class ServerCertificateValidation
     {
+#if !NET6_0_OR_GREATER
         internal static void Install()
         {
-            Type SPMType = typeof(ServicePointManager);
+            try
+            {
+                Type SPMType = typeof(ServicePointManager);
 
-            // ServicePointManager.Expect100Continue
-            FieldInfo expectContinue = SPMType.GetField(nameof(expectContinue), BindingFlags.NonPublic | BindingFlags.Static);
-            if (expectContinue != null)
-                expectContinue.SetValue(null, true);
+                // ServicePointManager.Expect100Continue
+                FieldInfo expectContinue = SPMType.GetField(nameof(expectContinue), BindingFlags.NonPublic | BindingFlags.Static);
+                if (expectContinue != null)
+                    expectContinue.SetValue(null, true);
 
-            //ServicePointManager.SecurityProtocol
-            FieldInfo _securityProtocol = SPMType.GetField(nameof(_securityProtocol), BindingFlags.NonPublic | BindingFlags.Static);
-            if (_securityProtocol != null)
-                _securityProtocol.SetValue(null,
-                    SecurityProtocolType.Ssl3
-                    | SecurityProtocolType.Tls
-                    | (SecurityProtocolType)768 /* SecurityProtocolType.Tls11 */
-                    | (SecurityProtocolType)3072 /* SecurityProtocolType.Tls12 */);
+                //ServicePointManager.SecurityProtocol
+                FieldInfo _securityProtocol = SPMType.GetField(nameof(_securityProtocol), BindingFlags.NonPublic | BindingFlags.Static);
+                if (_securityProtocol != null)
+                    _securityProtocol.SetValue(null,
+                        SecurityProtocolType.Ssl3
+                        | SecurityProtocolType.Tls
+                        | (SecurityProtocolType)768 /* SecurityProtocolType.Tls11 */
+                        | (SecurityProtocolType)3072 /* SecurityProtocolType.Tls12 */);
 
-            ServicePointManager.ServerCertificateValidationCallback += CertificateValidation;
+                ServicePointManager.ServerCertificateValidationCallback += CertificateValidation;
+            }
+            catch (Exception ex) { MelonLogger.Warning($"ServerCertificateValidation Exception: {ex}"); }
         }
         
         // Based on: https://stackoverflow.com/questions/43457050/error-getting-response-stream-write-the-authentication-or-decryption-has-faile
@@ -48,5 +55,10 @@ namespace MelonLoader.Fixes
             }
             return true;
         }
+#else
+        internal static void Install()
+        {
+        }
+#endif
     }
 }

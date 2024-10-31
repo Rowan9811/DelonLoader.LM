@@ -1,0 +1,28 @@
+[package]
+name = "Bootstrap"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+unity-rs = { git = "https://github.com/TrevTV/Ferrex/", branch = "mono-thread-checking" }
+ctor = "0.2.8"
+chrono = "0.4.38"
+colored = "2.1.0"
+thiserror = "1.0.61"
+lazy_static = "1.4.0"
+clap = { git = "https://github.com/RinLovesYou/clap", features = ["derive"] }
+libc = "0.2.155"
+dobby-rs = { git = "https://github.com/RinLovesYou/dobby-rs" }
+libc-stdhandle = "0.1.0"
+netcorehost = "0.17.0"
+exe = "0.5.6"
+md5 = "0.7.0"
+
+[target.'cfg(target_os = "android")'.dependencies]
+jni = "0.21.1"
+ndk = { version = "0.9.0", features = ["api-level-23"] }
+ndk-sys = "0.6.0"
+android_liblog-sys = "0.1.4"
+
+[lib]
+crate-type = ["cdylib"]
