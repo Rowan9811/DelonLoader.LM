@@ -25,7 +25,7 @@ I won't tell people how to use this yet.
 
 ## GENERAL INFORMATION:
 - [The ML Wiki](https://melonwiki.xyz)
-- [The LL Wiki](/../../wiki)
+- [The LM Wiki](/../../wiki)
 
 ## LICENSING & CREDITS:
 
