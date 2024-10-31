@@ -24,8 +24,8 @@ I won't tell people how to use this yet.
 
 
 ## GENERAL INFORMATION:
-- [The Official Wiki](https://melonwiki.xyz)
-- [The Lemon Wiki](/../../wiki)
+- [The ML Wiki](https://melonwiki.xyz)
+- [The LL Wiki](/../../wiki)
 
 ## LICENSING & CREDITS:
 
