@@ -4,8 +4,8 @@
 </p>
 
 ---
-## how to install
-I won't tell people how to install this yet.
+## How To Use
+I won't tell people how to use this yet.
 
 
 ## Lemon Credits
