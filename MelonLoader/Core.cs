@@ -12,6 +12,7 @@ using System.Text;
 using JNISharp.NativeInterface;
 using System.Linq;
 using System.Drawing;
+using Delon.Anti_Cheat;
 
 #if NET6_0_OR_GREATER
 using MelonLoader.CoreClrUtils;

@@ -11,7 +11,7 @@
 		<DebugType>embedded</DebugType>
 	</PropertyGroup>
 	<ItemGroup>
-		<ProjectReference Include="..\..\..\External\HarmonyX\Harmony\Harmony.csproj" />
+		<ProjectReference Include="..\..\..\External\HarmonyX\Harmony\Karmony.csproj" />
 		<ProjectReference Include="..\..\..\MelonLoader\DelonLoader.csproj" Private="false" />
 	</ItemGroup>
 </Project>
