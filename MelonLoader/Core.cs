@@ -123,6 +123,8 @@ namespace MelonLoader
 
             PatchShield.Install();
 
+            AntiCheatPatcher.Patch();
+
             MelonPreferences.Load();
 
             MelonCompatibilityLayer.LoadModules();
@@ -131,7 +133,7 @@ namespace MelonLoader
             MelonHandler.LoadMelonsFromDirectory<MelonPlugin>(MelonEnvironment.PluginsDirectory);
             MelonEvents.MelonHarmonyEarlyInit.Invoke();
             MelonEvents.OnPreInitialization.Invoke();
-
+            
             return 0;
         }
 

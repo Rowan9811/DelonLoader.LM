@@ -1,0 +1,51 @@
+name: Publish Release on GitHub
+
+on:
+  push:
+    tags:
+    - 'v*'
+
+env:
+  DOTNET_SKIP_FIRST_TIME_EXPERIENCE: 1
+  DOTNET_CLI_TELEMETRY_OPTOUT: 1
+  DOTNET_NOLOGO: 1
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    - name: Setup dotnet
+      uses: actions/setup-dotnet@v4
+      with: 
+        dotnet-version: '8.x'
+
+    - name: Get Version
+      id: get_version
+      shell: bash
+      run: |
+        tag=${GITHUB_REF##*/}
+        echo Current branch: ${tag:1}
+        echo "version_num=${tag:1}" >> "$GITHUB_OUTPUT"
+
+    - name: Run build script
+      run: ./build.ps1 --target=Build
+      shell: powershell
+      
+    - name: Create Release
+      uses: softprops/action-gh-release@v2
+      with:
+        name: Release ${{ github.ref }}
+        body: ""
+        draft: false
+        prerelease: false
+        token: ${{ secrets.GITHUB_TOKEN }}
+        files: |
+            ./Harmony/bin/Release/HarmonyX.${{ steps.get_version.outputs.version_num }}.nupkg

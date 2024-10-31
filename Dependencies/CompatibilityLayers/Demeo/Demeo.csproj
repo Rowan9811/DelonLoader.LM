@@ -12,6 +12,6 @@
 	</PropertyGroup>
 	<ItemGroup>
 		<ProjectReference Include="..\..\..\External\HarmonyX\Harmony\Harmony.csproj" />
-		<ProjectReference Include="..\..\..\MelonLoader\MelonLoader.csproj" Private="false" />
+		<ProjectReference Include="..\..\..\MelonLoader\DelonLoader.csproj" Private="false" />
 	</ItemGroup>
 </Project>

@@ -21,7 +21,7 @@
 		<ProjectReference Include="..\..\External\Il2CppInterop\Il2CppInterop.Generator\Il2CppInterop.Generator.csproj" />
 		<ProjectReference Include="..\..\External\Il2CppInterop\Il2CppInterop.Runtime\Il2CppInterop.Runtime.csproj" />
 		<ProjectReference Include="..\..\External\JNISharp\JNISharp\JNISharp.csproj" />
-		<ProjectReference Include="..\..\MelonLoader\MelonLoader.csproj" Private="false" />
+		<ProjectReference Include="..\..\MelonLoader\DelonLoader.csproj" Private="false" />
 		<PackageReference Include="AssetRipper.VersionUtilities" Version="1.5.0" ExcludeAssets="Runtime" />
 	</ItemGroup>
 </Project>

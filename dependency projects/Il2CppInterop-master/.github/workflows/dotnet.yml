@@ -1,0 +1,58 @@
+name: .NET
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    # Prevent running workflow twice on a PR from a non-fork
+    # We could use Skip Duplicate Actions, but this is shorter
+    if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name != github.event.pull_request.base.repo.full_name
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          global-json-file: global.json
+
+      - name: Extract Release Version
+        id: get_version
+        shell: bash
+        run: |
+          if [ "${GITHUB_REF#refs/tags/v}" != "$GITHUB_REF" ]; then
+            echo "version=${GITHUB_REF#refs/tags/v}" >> "$GITHUB_OUTPUT"
+          else
+            echo "build_tag=ci.${GITHUB_RUN_NUMBER}" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Build
+        run: ./build.sh --target=Pack --build_version ${{ steps.get_version.outputs.version }} --build_tag ${{ steps.get_version.outputs.build_tag }}
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          path: ./bin/zip/*.zip
+          name: Il2CppInterop
+
+      - name: Push to NuGet
+        if: github.ref == 'refs/heads/master' || startsWith(github.ref, 'refs/tags/v')
+        run: |
+          if [ "${GITHUB_REF#refs/tags/v}" != "$GITHUB_REF" ]; then
+            push_source="https://api.nuget.org/v3/index.json"
+            push_api_key="${{ secrets.NUGET_ORG_KEY }}"
+          else
+            push_source="${{ secrets.BEPIN_DEV_NUGET_SOURCE }}"
+            push_api_key="${{ secrets.BEPIN_DEV_NUGET_KEY }}"
+          fi
+          dotnet nuget push --skip-duplicate -s "$push_source" -k "$push_api_key" ./bin/NuGet/*.nupkg
+
+      - name: Publish a release
+        uses: softprops/action-gh-release@v2
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          files: ./bin/zip/*.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

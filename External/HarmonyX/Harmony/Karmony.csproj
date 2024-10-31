@@ -1,0 +1,140 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFrameworks>net35;net452;netstandard2.0</TargetFrameworks>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <Product>HarmonyX</Product>
+        <Company>BepInEx</Company>
+        <Copyright>Copyright © BepInEx 2022</Copyright>
+        <Description>A general non-destructive patch library for .NET and Mono modules</Description>
+        <PackageId>HarmonyX</PackageId>
+        <Authors>Andreas Pardeike, Geoffrey Horsington, ManlyMarco et al.</Authors>
+        <AssemblyName>0Harmony</AssemblyName>
+        <SignAssembly>true</SignAssembly>
+        <PackageLicenseFile>LICENSE</PackageLicenseFile>
+        <PackageProjectUrl>https://github.com/BepInEx/HarmonyX</PackageProjectUrl>
+        <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+        <PackageTags>Harmony,Mono,Patch,Patching,Runtime,Detour,Detours,Aspect,Aspects</PackageTags>
+        <PackageIcon>logo_mini.png</PackageIcon>
+        <PackageIconUrl>https://raw.githubusercontent.com/BepInEx/HarmonyX/master/logo_mini.png</PackageIconUrl>
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+        <LangVersion>latest</LangVersion>
+        <DefaultItemExcludes>$(DefaultItemExcludes);Documentation/**</DefaultItemExcludes>
+        <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+        <CheckEolTargetFramework>false</CheckEolTargetFramework>
+        <Version>$(HarmonyXVersion)</Version>
+        <AssemblyVersion>$(HarmonyXVersionFull)</AssemblyVersion>
+        <FileVersion>$(HarmonyXVersionFull)</FileVersion>
+        <PackageVersion>$(HarmonyXVersion)$(HarmonyXVersionSuffix)</PackageVersion>
+        <InformationalVersion>$(HarmonyXVersion)$(HarmonyXVersionSuffix)</InformationalVersion>
+        <NoWarn>$(NoWarn);SYSLIB0011;NU5131</NoWarn>
+        <Configurations>Debug;Release</Configurations>
+        <PublishRepositoryUrl>true</PublishRepositoryUrl>
+        <EmbedUntrackedSources>true</EmbedUntrackedSources>
+        <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
+        <ClearOutputDirectory>True</ClearOutputDirectory>
+        <RootNamespace>HarmonyLib</RootNamespace>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <None Include="..\README.md" Pack="false" PackagePath="" />
+        <None Include="..\LICENSE" Pack="true" PackagePath="" />
+        <None Include="..\logo_mini.png" Pack="true" Visible="false" PackagePath="" />
+    </ItemGroup>
+
+    <PropertyGroup Condition="'$(Configuration)'=='Debug'">
+        <Optimize>false</Optimize>
+        <DebugType>full</DebugType>
+        <DebugSymbols>true</DebugSymbols>
+        <DefineConstants>DEBUG</DefineConstants>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(Configuration)'=='Release'">
+        <Optimize>true</Optimize>
+        <DebugType>portable</DebugType>
+        <DebugSymbols>true</DebugSymbols>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <!-- Reference assemblies are needed for non-Windows .NET Framework targeting builds. -->
+        <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.3" PrivateAssets="all" />
+
+        <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All" />
+    </ItemGroup>
+
+    <ItemGroup Condition="$(TargetFramework)=='net35'">
+      <PackageReference Include="Mono.Cecil" Version="0.10.4" />
+    </ItemGroup>
+
+    <ItemGroup Condition="$(TargetFramework)=='net452'">
+      <PackageReference Include="Mono.Cecil" Version="0.11.5" />
+      <PackageReference Include="System.ValueTuple" Version="4.5.0" />
+    </ItemGroup>
+
+    <ItemGroup Condition="$(TargetFramework)=='netstandard2.0'">
+        <!-- Adding System.Reflection.Emit.* because there are public types exposed from its's package -->
+        <PackageReference Include="System.Reflection.Emit" Version="4.7.0" IncludeAssets="compile" />
+
+        <!-- Minimal suitable major version -->
+        <PackageReference Include="System.Text.Json" Version="5.0.2" />
+        <PackageReference Include="System.Reflection.Emit.ILGeneration" Version="4.7.0" />
+        <PackageReference Include="System.Reflection.Emit.Lightweight" Version="4.7.0" />
+        <PackageReference Include="Mono.Cecil" Version="0.11.5" />
+    </ItemGroup>
+
+    <ItemGroup Condition="$(TargetFramework)=='net452'">
+    </ItemGroup>
+
+    <ItemGroup Condition="$(TargetFramework)=='netstandard2.0'">
+      
+    </ItemGroup>
+
+    <ItemGroup>
+      <Reference Include="MonoMod.Backports">
+        <HintPath>..\..\MonoMod\net8.0\MonoMod.Backports.dll</HintPath>
+      </Reference>
+      <Reference Include="MonoMod.Core">
+        <HintPath>..\..\MonoMod\net8.0\MonoMod.Core.dll</HintPath>
+      </Reference>
+      <Reference Include="MonoMod.Iced">
+        <HintPath>..\..\MonoMod\net8.0\MonoMod.Iced.dll</HintPath>
+      </Reference>
+      <Reference Include="MonoMod.ILHelpers">
+        <HintPath>..\..\MonoMod\net8.0\MonoMod.ILHelpers.dll</HintPath>
+      </Reference>
+      <Reference Include="MonoMod.Utils">
+        <HintPath>..\..\MonoMod\net8.0\MonoMod.Utils.dll</HintPath>
+      </Reference>
+    </ItemGroup>
+
+    <Target Name="RemoveOldNuGetPackages" BeforeTargets="PreBuildEvent">
+        <PropertyGroup>
+            <WorkingDirectory>$(MSBuildThisFileDirectory)bin\$(Configuration)</WorkingDirectory>
+        </PropertyGroup>
+        <ItemGroup>
+            <OldNugetPackages Include="$(WorkingDirectory)\$(PackageId).*.nupkg" Exclude="$(WorkingDirectory)\$(PackageId).$(Version).nupkg" />
+        </ItemGroup>
+        <Delete Files="@(OldNugetPackages)" />
+    </Target>
+
+    <Target Name="CleanZip" AfterTargets="Clean">
+        <ItemGroup>
+            <OldZipFiles Include="$(MSBuildThisFileDirectory)bin\Harmony.*.zip" Condition="'$(Configuration)'=='Release'" />
+        </ItemGroup>
+        <Delete Files="@(OldZipFiles)" />
+    </Target>
+
+    <Target Name="RemoveExtraDlls" AfterTargets="Pack">
+        <ItemGroup>
+            <ExtraDlls Include="$(MSBuildThisFileDirectory)bin\**\MonoMod.*.*" />
+            <ExtraDlls Include="$(MSBuildThisFileDirectory)bin\**\Mono.*.*" />
+            <ExtraDlls Include="$(MSBuildThisFileDirectory)bin\**\System.*.*" />
+        </ItemGroup>
+        <Delete Files="@(ExtraDlls)" />
+    </Target>
+
+    <Target Name="Zip" AfterTargets="RemoveExtraDlls" DependsOnTargets="CleanZip">
+        <ZipDirectory SourceDirectory="$(MSBuildThisFileDirectory)bin\$(Configuration)" DestinationFile="$(MSBuildThisFileDirectory)bin\Harmony.$(Version).zip" Overwrite="true" Condition="'$(Configuration)'=='Release'" />
+    </Target>
+</Project>

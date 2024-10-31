@@ -1,0 +1,78 @@
+name: Build
+
+on: 
+  push:
+    branches:
+      - "**"
+  pull_request:
+  workflow_dispatch:
+
+env:
+  DOTNET_SKIP_FIRST_TIME_EXPERIENCE: 1
+  DOTNET_CLI_TELEMETRY_OPTOUT: 1
+  DOTNET_NOLOGO: 1
+
+jobs:
+  test:
+    runs-on: windows-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    - name: Setup dotnet
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: |
+          3.x
+          5.x
+          6.x
+          7.x
+          8.x
+
+    - name: Log dotnet info
+      run: dotnet --info
+
+    - name: Run test
+      run: ./build.ps1 --target=Test
+      
+  build:
+    runs-on: windows-latest
+    if: github.ref == 'refs/heads/master'
+    needs: test
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    - name: Setup dotnet
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '8.x'
+    
+    - name: Make repo pushable
+      env:
+        GITHUB_USER: ${{ secrets.GITHUB_USER }}
+        GITHUB_PAT: ${{ secrets.GITHUB_PAT }}
+      shell: bash
+      run: git remote set-url --push origin https://$GITHUB_USER:$GITHUB_PAT@github.com/$GITHUB_REPOSITORY.git
+      
+    - name: Run build script
+      run: ./build.ps1 --target=Build
+      
+    - name: Create a release tag
+      if: github.ref == 'refs/heads/master'
+      env:
+        NUGET_KEY: ${{ secrets.NUGET_KEY }}
+      run: ./build.ps1 --target=Publish --nugetKey="${env:NUGET_KEY}"
+      
+    - name: Get target file
+      id: getfilename
+      shell: bash
+      run: |
+        echo "file=$(ls ./Harmony/bin/Release/HarmonyX*.nupkg)" >> "$GITHUB_OUTPUT"
+
+    - name: Upload HarmonyX nupkg
+      uses: actions/upload-artifact@v4
+      with:
+        name: HarmonyX
+        path: ${{ steps.getfilename.outputs.file }}
