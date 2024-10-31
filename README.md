@@ -5,7 +5,7 @@
 
 ---
 ## How To Use
-I won't tell people how to use this yet.
+I won't tell people how to use this until I have it stable.
 
 
 ## Lemon Credits
