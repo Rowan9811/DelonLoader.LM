@@ -1,19 +1,12 @@
 
 <p align="center">
-  <a href="#"><img src="https://i.imgur.com/z06P0RG.png"></a>
-  <a href="#"><img src="https://i.imgur.com/0HaLAVh.png"></a>
+  <a href="#"><img src="https://i.imgur.com/mHA9aWD.png"></a>
 </p>
 
 ---
+## How To Use
+I won't tell people how to use this until it works.
 
-<p align="center">
-	<a href="https://github.com/LemonLoader/MelonLoader/releases/latest"><img src="https://img.shields.io/github/v/release/LemonLoader/MelonLoader?label=latest&style=for-the-badge"></a>
-	<a href="https://github.com/LemonLoader/MelonLoader/releases"><img src="https://img.shields.io/github/downloads/LemonLoader/MelonLoader/total.svg?style=for-the-badge"></a>
-	<a href="https://github.com/LemonLoader/MelonLoader/graphs/contributors"><img src="https://img.shields.io/github/contributors/LemonLoader/MelonLoader?style=for-the-badge"></a>
-	<a href="https://discord.gg/RAFGe33Y28"><img src="https://img.shields.io/discord/838613285749653534?label=discord&style=for-the-badge&color=blueviolet"></a>
-</p>
-
----
 
 ## Lemon Credits
 - [SirCoolness](https://github.com/SirCoolness)
@@ -31,8 +24,8 @@
 
 
 ## GENERAL INFORMATION:
-- [The Official Wiki](https://melonwiki.xyz)
-- [The Lemon Wiki](/../../wiki)
+- [The ML Wiki](https://melonwiki.xyz)
+- [The LM Wiki](https://github.com/LemonLoader/MelonLoader/wiki)
 
 ## LICENSING & CREDITS:
 
